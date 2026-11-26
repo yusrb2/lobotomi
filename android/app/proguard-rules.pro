@@ -21,6 +21,7 @@
 #-renamesourcefileattribute SourceFile
 
 # Capacitor core bridge & annotations
+-keep class com.lobotomi.app.** { *; }
 -keep class com.getcapacitor.** { *; }
 -keep @com.getcapacitor.annotation.CapacitorPlugin class * { *; }
 -keepclassmembers class * {

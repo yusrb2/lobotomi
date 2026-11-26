@@ -1,4 +1,4 @@
-import type { IfThenRule, LowDopamineItem, AppSettings } from './types';
+import type { GatekeeperConfig, IfThenRule, LowDopamineItem, AppSettings } from './types';
 
 export const DEFAULT_SETTINGS: AppSettings = {
   locale: 'en',
@@ -7,6 +7,13 @@ export const DEFAULT_SETTINGS: AppSettings = {
   defaultNoise: 'off',
   noiseVolume: 0.35,
   chimeEnabled: true,
+};
+
+export const DEFAULT_GATEKEEPER_CONFIG: GatekeeperConfig = {
+  apps: [],
+  defaultDelaySeconds: 180,
+  defaultGraceMinutes: 15,
+  ambientSound: 'brown',
 };
 
 const BASE_TIME = 1700000000000;

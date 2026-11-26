@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gatekeeper_bg">#131312</color>
+    <color name="gatekeeper_surface">#1C1B1A</color>
+    <color name="gatekeeper_border">#2C2A27</color>
+    <color name="gatekeeper_ink">#E6E2D8</color>
+    <color name="gatekeeper_ink_muted">#969185</color>
+    <color name="gatekeeper_accent">#7A9E84</color>
+</resources>

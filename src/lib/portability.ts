@@ -1,6 +1,14 @@
 import type { ExportPayload } from '../db/types';
-import { DEFAULT_SETTINGS } from '../db/seeds';
-import { dumps, ledger, menuItems, rules, sessions, settings } from '../state/store';
+import { DEFAULT_GATEKEEPER_CONFIG, DEFAULT_SETTINGS } from '../db/seeds';
+import {
+  dumps,
+  gatekeeperConfig,
+  ledger,
+  menuItems,
+  rules,
+  sessions,
+  settings,
+} from '../state/store';
 
 function todaySlug(): string {
   const d = new Date();
@@ -32,6 +40,7 @@ export function buildExportPayload(): ExportPayload {
     menuItems: menuItems.value,
     ledger: ledger.value,
     dumps: dumps.value,
+    gatekeeper: gatekeeperConfig.value,
   };
 }
 
@@ -90,6 +99,13 @@ export function validateExportPayload(raw: unknown): ExportPayload | null {
     menuItems: obj.menuItems as ExportPayload['menuItems'],
     ledger: obj.ledger as ExportPayload['ledger'],
     dumps: obj.dumps as ExportPayload['dumps'],
+    gatekeeper:
+      obj.gatekeeper && typeof obj.gatekeeper === 'object'
+        ? {
+            ...DEFAULT_GATEKEEPER_CONFIG,
+            ...(obj.gatekeeper as Partial<ExportPayload['gatekeeper']>),
+          }
+        : DEFAULT_GATEKEEPER_CONFIG,
   };
 }
 

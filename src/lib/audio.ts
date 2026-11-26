@@ -1,11 +1,14 @@
 import type { AmbientNoise } from '../db/types';
 
+export type EngineAudioMode = AmbientNoise | 'drone';
+
 class AudioEngine {
   private ctx: AudioContext | null = null;
   private source: AudioBufferSourceNode | null = null;
   private filter: BiquadFilterNode | null = null;
+  private droneNodes: AudioNode[] = [];
   private gain: GainNode | null = null;
-  private currentType: AmbientNoise = 'off';
+  private currentType: EngineAudioMode = 'off';
 
   private ensureContext(): AudioContext | null {
     if (typeof window === 'undefined') return null;
@@ -38,7 +41,6 @@ class AudioEngine {
         output[i] *= 2.8;
       }
     } else {
-      // Paul Kellet's refined pink noise approximation
       let b0 = 0;
       let b1 = 0;
       let b2 = 0;
@@ -59,7 +61,6 @@ class AudioEngine {
       }
     }
 
-    // Crossfade first/last 512 samples for a click-free loop boundary
     const fade = 512;
     for (let i = 0; i < fade; i++) {
       const t = i / fade;
@@ -71,7 +72,7 @@ class AudioEngine {
     return buffer;
   }
 
-  startNoise(type: AmbientNoise, volume: number): void {
+  startNoise(type: EngineAudioMode, volume: number): void {
     if (type === 'off') {
       this.stopNoise();
       return;
@@ -80,12 +81,50 @@ class AudioEngine {
     const ctx = this.ensureContext();
     if (!ctx) return;
 
-    if (this.currentType === type && this.gain && this.source) {
+    if (this.currentType === type && this.gain && (this.source || this.droneNodes.length > 0)) {
       this.setVolume(volume);
       return;
     }
 
     this.stopImmediate();
+
+    const gain = ctx.createGain();
+    const targetGain = Math.max(0, Math.min(1, volume)) * (type === 'drone' ? 0.28 : 0.45);
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(targetGain, ctx.currentTime + 0.3);
+    gain.connect(ctx.destination);
+
+    if (type === 'drone') {
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 380;
+      filter.connect(gain);
+
+      const partials = [
+        { freq: 110, amp: 0.5 },
+        { freq: 164.81, amp: 0.25 },
+        { freq: 220.4, amp: 0.16 },
+      ];
+      const nodes: AudioNode[] = [filter];
+
+      for (const p of partials) {
+        const osc = ctx.createOscillator();
+        const subGain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = p.freq;
+        subGain.gain.value = p.amp;
+        osc.connect(subGain);
+        subGain.connect(filter);
+        osc.start();
+        nodes.push(osc, subGain);
+      }
+
+      this.filter = filter;
+      this.droneNodes = nodes;
+      this.gain = gain;
+      this.currentType = 'drone';
+      return;
+    }
 
     const buffer = this.buildNoiseBuffer(ctx, type);
     const source = ctx.createBufferSource();
@@ -97,14 +136,8 @@ class AudioEngine {
     filter.frequency.value = type === 'brown' ? 320 : 1400;
     filter.Q.value = 0.7;
 
-    const gain = ctx.createGain();
-    const targetGain = Math.max(0, Math.min(1, volume)) * 0.45;
-    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(targetGain, ctx.currentTime + 0.25);
-
     source.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
     source.start();
 
     this.source = source;
@@ -115,14 +148,15 @@ class AudioEngine {
 
   setVolume(volume: number): void {
     if (!this.ctx || !this.gain) return;
-    const target = Math.max(0, Math.min(1, volume)) * 0.45;
+    const scale = this.currentType === 'drone' ? 0.28 : 0.45;
+    const target = Math.max(0, Math.min(1, volume)) * scale;
     this.gain.gain.cancelScheduledValues(this.ctx.currentTime);
     this.gain.gain.setValueAtTime(this.gain.gain.value, this.ctx.currentTime);
     this.gain.gain.linearRampToValueAtTime(target, this.ctx.currentTime + 0.12);
   }
 
   stopNoise(): void {
-    if (!this.ctx || !this.gain || !this.source) {
+    if (!this.ctx || !this.gain || (!this.source && this.droneNodes.length === 0)) {
       this.currentType = 'off';
       return;
     }
@@ -130,9 +164,11 @@ class AudioEngine {
     const source = this.source;
     const gain = this.gain;
     const filter = this.filter;
+    const droneNodes = this.droneNodes;
     this.source = null;
     this.gain = null;
     this.filter = null;
+    this.droneNodes = [];
     this.currentType = 'off';
 
     try {
@@ -142,8 +178,14 @@ class AudioEngine {
       gain.gain.linearRampToValueAtTime(0.0001, now + 0.22);
       setTimeout(() => {
         try {
-          source.stop();
-          source.disconnect();
+          source?.stop();
+          source?.disconnect();
+          for (const node of droneNodes) {
+            if ('stop' in node && typeof (node as OscillatorNode).stop === 'function') {
+              (node as OscillatorNode).stop();
+            }
+            node.disconnect();
+          }
           filter?.disconnect();
           gain.disconnect();
         } catch {
@@ -159,6 +201,12 @@ class AudioEngine {
     try {
       this.source?.stop();
       this.source?.disconnect();
+      for (const node of this.droneNodes) {
+        if ('stop' in node && typeof (node as OscillatorNode).stop === 'function') {
+          (node as OscillatorNode).stop();
+        }
+        node.disconnect();
+      }
       this.filter?.disconnect();
       this.gain?.disconnect();
     } catch {
@@ -166,6 +214,7 @@ class AudioEngine {
     }
     this.source = null;
     this.filter = null;
+    this.droneNodes = [];
     this.gain = null;
     this.currentType = 'off';
   }

@@ -3,12 +3,13 @@ import type {
   AppSettings,
   BrainDumpEntry,
   ExportPayload,
+  GatekeeperConfig,
   IfThenRule,
   LedgerEntry,
   LowDopamineItem,
   SessionRecord,
 } from './types';
-import { DEFAULT_SETTINGS, SEED_MENU_ITEMS, SEED_RULES } from './seeds';
+import { DEFAULT_GATEKEEPER_CONFIG, DEFAULT_SETTINGS, SEED_MENU_ITEMS, SEED_RULES } from './seeds';
 
 interface LobotomiDB extends DBSchema {
   sessions: {
@@ -89,12 +90,14 @@ export async function seedIfNeeded(): Promise<void> {
     await tx.objectStore('menuItems').put(item);
   }
   await tx.objectStore('meta').put(DEFAULT_SETTINGS, 'settings');
+  await tx.objectStore('meta').put(DEFAULT_GATEKEEPER_CONFIG, 'gatekeeper');
   await tx.objectStore('meta').put(true, 'seeded');
   await tx.done;
 }
 
 export async function loadAllData(): Promise<{
   settings: AppSettings;
+  gatekeeper: GatekeeperConfig;
   sessions: SessionRecord[];
   rules: IfThenRule[];
   menuItems: LowDopamineItem[];
@@ -103,8 +106,9 @@ export async function loadAllData(): Promise<{
 }> {
   await seedIfNeeded();
   const db = await getDB();
-  const [rawSettings, sessions, rules, menuItems, ledger, dumps] = await Promise.all([
+  const [rawSettings, rawGatekeeper, sessions, rules, menuItems, ledger, dumps] = await Promise.all([
     db.get('meta', 'settings') as Promise<Partial<AppSettings> | undefined>,
+    db.get('meta', 'gatekeeper') as Promise<Partial<GatekeeperConfig> | undefined>,
     db.getAllFromIndex('sessions', 'by-startedAt'),
     db.getAll('rules'),
     db.getAll('menuItems'),
@@ -114,6 +118,11 @@ export async function loadAllData(): Promise<{
 
   return {
     settings: { ...DEFAULT_SETTINGS, ...(rawSettings ?? {}) },
+    gatekeeper: {
+      ...DEFAULT_GATEKEEPER_CONFIG,
+      ...(rawGatekeeper ?? {}),
+      apps: Array.isArray(rawGatekeeper?.apps) ? rawGatekeeper.apps : [],
+    },
     sessions: sessions.sort((a, b) => b.startedAt - a.startedAt),
     rules: rules.sort((a, b) => b.createdAt - a.createdAt),
     menuItems: menuItems.sort((a, b) => a.createdAt - b.createdAt),
@@ -125,6 +134,11 @@ export async function loadAllData(): Promise<{
 export async function saveSettingsDB(settings: AppSettings): Promise<void> {
   const db = await getDB();
   await db.put('meta', settings, 'settings');
+}
+
+export async function saveGatekeeperDB(gatekeeper: GatekeeperConfig): Promise<void> {
+  const db = await getDB();
+  await db.put('meta', gatekeeper, 'gatekeeper');
 }
 
 export async function putSessionDB(session: SessionRecord): Promise<void> {
@@ -196,6 +210,12 @@ export async function replaceAllDataDB(payload: ExportPayload): Promise<void> {
   for (const l of payload.ledger) await tx.objectStore('ledger').put(l);
   for (const d of payload.dumps) await tx.objectStore('dumps').put(d);
   await tx.objectStore('meta').put({ ...DEFAULT_SETTINGS, ...payload.settings }, 'settings');
+  await tx.objectStore('meta').put(
+    payload.gatekeeper
+      ? { ...DEFAULT_GATEKEEPER_CONFIG, ...payload.gatekeeper }
+      : DEFAULT_GATEKEEPER_CONFIG,
+    'gatekeeper'
+  );
   await tx.objectStore('meta').put(true, 'seeded');
   await tx.done;
 }

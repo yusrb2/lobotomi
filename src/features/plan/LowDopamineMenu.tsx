@@ -1,10 +1,17 @@
-import { useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { Pencil, Plus, Shuffle, Trash2 } from 'lucide-preact';
 import { Button } from '../../components/ui/Button';
 import { Dialog } from '../../components/ui/Dialog';
 import type { LowDopamineItem, MenuDuration, MenuEnergy } from '../../db/types';
 import { cn } from '../../lib/cn';
-import { dict, makeId, menuItems, removeMenuItem, saveMenuItem } from '../../state/store';
+import {
+  autoPickNonce,
+  dict,
+  makeId,
+  menuItems,
+  removeMenuItem,
+  saveMenuItem,
+} from '../../state/store';
 
 const DURATIONS: MenuDuration[] = ['short', 'medium', 'long'];
 const ENERGIES: MenuEnergy[] = ['low', 'normal', 'high'];
@@ -46,6 +53,24 @@ export function LowDopamineMenu() {
     const choice = pool[Math.floor(Math.random() * pool.length)];
     setPickedId(choice.id);
   };
+
+  const handledNonceRef = useRef(0);
+  useEffect(() => {
+    const nonce = autoPickNonce.value;
+    if (nonce > 0 && nonce !== handledNonceRef.current) {
+      handledNonceRef.current = nonce;
+      if (menuItems.value.length > 0) {
+        const pool =
+          menuItems.value.length > 1 && pickedId
+            ? menuItems.value.filter((item) => item.id !== pickedId)
+            : menuItems.value;
+        const choice = pool[Math.floor(Math.random() * pool.length)];
+        setDurationFilter('all');
+        setEnergyFilter('all');
+        setPickedId(choice.id);
+      }
+    }
+  }, [autoPickNonce.value]);
 
   const openNew = () => {
     setEditing(null);

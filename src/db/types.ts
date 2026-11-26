@@ -1,6 +1,7 @@
 export type Locale = 'en' | 'id';
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type AmbientNoise = 'off' | 'brown' | 'pink';
+export type GatekeeperAudioMode = 'brown' | 'drone' | 'silent';
 
 export type UrgeTrigger =
   | 'boredom'
@@ -22,6 +23,22 @@ export interface SessionRecord {
   trigger?: UrgeTrigger;
   clarityBefore?: number;
   clarityAfter?: number;
+  appPackage?: string;
+  appName?: string;
+}
+
+export interface GuardedAppConfig {
+  packageName: string;
+  appName: string;
+  delaySeconds: 180 | 300;
+  graceMinutes: 5 | 15 | 30;
+}
+
+export interface GatekeeperConfig {
+  apps: GuardedAppConfig[];
+  defaultDelaySeconds: 180 | 300;
+  defaultGraceMinutes: 5 | 15 | 30;
+  ambientSound: GatekeeperAudioMode;
 }
 
 export interface IfThenRule {
@@ -81,4 +98,5 @@ export interface ExportPayload {
   menuItems: LowDopamineItem[];
   ledger: LedgerEntry[];
   dumps: BrainDumpEntry[];
+  gatekeeper?: GatekeeperConfig;
 }

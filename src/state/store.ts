@@ -3,6 +3,7 @@ import type {
   AppSettings,
   BrainDumpEntry,
   ExportPayload,
+  GatekeeperConfig,
   IfThenRule,
   LedgerEntry,
   Locale,
@@ -10,7 +11,7 @@ import type {
   SessionRecord,
   ThemeMode,
 } from '../db/types';
-import { DEFAULT_SETTINGS } from '../db/seeds';
+import { DEFAULT_GATEKEEPER_CONFIG, DEFAULT_SETTINGS } from '../db/seeds';
 import {
   deleteDumpDB,
   deleteLedgerEntryDB,
@@ -25,16 +26,26 @@ import {
   putSessionDB,
   replaceAllDataDB,
   resetAllDataDB,
+  saveGatekeeperDB,
   saveSettingsDB,
 } from '../db/client';
 import { getDict } from '../i18n';
 import { syncStatusBar } from '../lib/native';
+import {
+  consumePendingData,
+  isAndroidNative,
+  saveGuardedAppsToNative,
+} from '../lib/gatekeeper';
 
-export type NavTab = 'pause' | 'fast' | 'plan' | 'ledger';
+export type NavTab = 'pause' | 'fast' | 'guard' | 'plan' | 'ledger';
+export type PlanSubTab = 'rules' | 'menu';
 
 export const ready = signal(false);
 export const activeTab = signal<NavTab>('pause');
+export const planSubTab = signal<PlanSubTab>('rules');
+export const autoPickNonce = signal(0);
 export const settings = signal<AppSettings>(DEFAULT_SETTINGS);
+export const gatekeeperConfig = signal<GatekeeperConfig>(DEFAULT_GATEKEEPER_CONFIG);
 export const sessions = signal<SessionRecord[]>([]);
 export const rules = signal<IfThenRule[]>([]);
 export const menuItems = signal<LowDopamineItem[]>([]);
@@ -85,6 +96,62 @@ export function setOledActive(active: boolean) {
   applyDocumentTheme(active ? 'oled' : resolvedTheme.value);
 }
 
+export async function syncGatekeeperToNative(): Promise<void> {
+  if (!isAndroidNative()) return;
+  const activePrompts = rules.value
+    .filter((r) => r.active)
+    .map((r) =>
+      settings.value.locale === 'id'
+        ? `JIKA ${r.trigger} — MAKA ${r.action}`
+        : `IF ${r.trigger} — THEN ${r.action}`
+    );
+
+  await saveGuardedAppsToNative({
+    apps: gatekeeperConfig.value.apps,
+    prompts: activePrompts,
+    locale: settings.value.locale,
+    ambientSound: gatekeeperConfig.value.ambientSound,
+    hapticsEnabled: settings.value.hapticsEnabled,
+  });
+}
+
+export function triggerSlowMenuRedirect(): void {
+  activeTab.value = 'plan';
+  planSubTab.value = 'menu';
+  autoPickNonce.value += 1;
+}
+
+export async function consumeNativeGatekeeperData(): Promise<void> {
+  if (!isAndroidNative()) return;
+  try {
+    const pending = await consumePendingData();
+    if (Array.isArray(pending.events) && pending.events.length > 0) {
+      for (const ev of pending.events) {
+        if (!ev || !ev.id) continue;
+        const alreadySaved = sessions.value.some((s) => s.id === ev.id);
+        if (alreadySaved) continue;
+        await addSession({
+          id: ev.id,
+          type: 'urge',
+          startedAt: ev.startedAt,
+          endedAt: ev.endedAt,
+          plannedSeconds: ev.plannedSeconds,
+          actualSeconds: ev.actualSeconds,
+          completed: ev.outcome === 'continued' || ev.actualSeconds >= ev.plannedSeconds - 1,
+          trigger: 'muscle_memory',
+          appPackage: ev.packageName,
+          appName: ev.appName,
+        });
+      }
+    }
+    if (pending.route === 'slow_menu') {
+      triggerSlowMenuRedirect();
+    }
+  } catch {
+    // Ignore native bridge errors on startup.
+  }
+}
+
 export async function initStore(): Promise<void> {
   if (typeof window !== 'undefined' && window.matchMedia) {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -98,6 +165,7 @@ export async function initStore(): Promise<void> {
 
   const data = await loadAllData();
   settings.value = data.settings;
+  gatekeeperConfig.value = data.gatekeeper;
   sessions.value = data.sessions;
   rules.value = data.rules;
   menuItems.value = data.menuItems;
@@ -112,6 +180,9 @@ export async function initStore(): Promise<void> {
 
   applyDocumentTheme(resolvedTheme.value);
   ready.value = true;
+
+  await syncGatekeeperToNative();
+  await consumeNativeGatekeeperData();
 }
 
 export async function updateSettings(patch: Partial<AppSettings>): Promise<void> {
@@ -128,6 +199,18 @@ export async function updateSettings(patch: Partial<AppSettings>): Promise<void>
     }
   }
   await saveSettingsDB(next);
+  if (patch.locale !== undefined || patch.hapticsEnabled !== undefined) {
+    void syncGatekeeperToNative();
+  }
+}
+
+export async function updateGatekeeperConfig(
+  patch: Partial<GatekeeperConfig>
+): Promise<void> {
+  const next = { ...gatekeeperConfig.value, ...patch };
+  gatekeeperConfig.value = next;
+  await saveGatekeeperDB(next);
+  await syncGatekeeperToNative();
 }
 
 export function toggleLocale(): void {
@@ -159,11 +242,13 @@ export async function saveRule(rule: IfThenRule): Promise<void> {
   rules.value = [rule, ...rules.value.filter((r) => r.id !== rule.id)].sort(
     (a, b) => b.createdAt - a.createdAt
   );
+  void syncGatekeeperToNative();
 }
 
 export async function removeRule(id: string): Promise<void> {
   await deleteRuleDB(id);
   rules.value = rules.value.filter((r) => r.id !== id);
+  void syncGatekeeperToNative();
 }
 
 export async function saveMenuItem(item: LowDopamineItem): Promise<void> {

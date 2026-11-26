@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'preact/hooks';
-import { BookOpen, Clock, Compass, Pause, Settings, SunMedium, Moon } from 'lucide-preact';
+import {
+  BookOpen,
+  Clock,
+  Compass,
+  Pause,
+  Settings,
+  Shield,
+  SunMedium,
+  Moon,
+} from 'lucide-preact';
 import {
   activeTab,
+  consumeNativeGatekeeperData,
   cycleTheme,
   dict,
   initStore,
@@ -10,12 +20,15 @@ import {
   resolvedTheme,
   settings,
   toggleLocale,
+  triggerSlowMenuRedirect,
   type NavTab,
 } from './state/store';
 import { cn } from './lib/cn';
+import { onGatekeeperRoute } from './lib/gatekeeper';
 import { HomeView } from './features/home/HomeView';
 import { UrgeSurfDialog } from './features/urge/UrgeSurfDialog';
 import { BoredomFastView } from './features/fast/BoredomFastView';
+import { GatekeeperView } from './features/gatekeeper/GatekeeperView';
 import { PlanView } from './features/plan/PlanView';
 import { LedgerView } from './features/ledger/LedgerView';
 import { SettingsDialog } from './features/settings/SettingsDialog';
@@ -26,6 +39,30 @@ export function App() {
 
   useEffect(() => {
     void initStore();
+
+    let removeRouteListener: (() => Promise<void>) | null = null;
+    void onGatekeeperRoute((route) => {
+      void consumeNativeGatekeeperData();
+      if (route === 'slow_menu') {
+        triggerSlowMenuRedirect();
+      }
+    }).then((fn) => {
+      removeRouteListener = fn;
+    });
+
+    const onResume = () => {
+      if (document.visibilityState === 'visible') {
+        void consumeNativeGatekeeperData();
+      }
+    };
+    document.addEventListener('visibilitychange', onResume);
+
+    return () => {
+      document.removeEventListener('visibilitychange', onResume);
+      if (removeRouteListener) {
+        void removeRouteListener();
+      }
+    };
   }, []);
 
   if (!ready.value) {
@@ -45,6 +82,7 @@ export function App() {
   const navItems: { id: NavTab; label: string; icon: typeof Pause }[] = [
     { id: 'pause', label: copy.nav.pause, icon: Pause },
     { id: 'fast', label: copy.nav.fast, icon: Clock },
+    { id: 'guard', label: copy.nav.guard, icon: Shield },
     { id: 'plan', label: copy.nav.plan, icon: Compass },
     { id: 'ledger', label: copy.nav.ledger, icon: BookOpen },
   ];
@@ -98,6 +136,7 @@ export function App() {
       <main className="flex flex-1 flex-col px-5 py-6">
         {tab === 'pause' && <HomeView onStartUrge={() => setUrgeOpen(true)} />}
         {tab === 'fast' && <BoredomFastView />}
+        {tab === 'guard' && <GatekeeperView />}
         {tab === 'plan' && <PlanView />}
         {tab === 'ledger' && <LedgerView />}
       </main>
@@ -107,7 +146,7 @@ export function App() {
           aria-label="Primary"
           className="sticky bottom-0 border-t border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-[2px]"
         >
-          <div className="mx-auto grid max-w-2xl grid-cols-4">
+          <div className="mx-auto grid max-w-2xl grid-cols-5">
             {navItems.map(({ id, label, icon: Icon }) => {
               const active = tab === id;
               return (
