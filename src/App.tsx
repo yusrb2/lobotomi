@@ -9,15 +9,17 @@ import {
   ready,
   resolvedTheme,
   settings,
-  todayQuietMinutes,
   toggleLocale,
   type NavTab,
 } from './state/store';
 import { cn } from './lib/cn';
 import { Dialog } from './components/ui/Dialog';
+import { HomeView } from './features/home/HomeView';
+import { UrgeSurfDialog } from './features/urge/UrgeSurfDialog';
 
 export function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [urgeOpen, setUrgeOpen] = useState(false);
 
   useEffect(() => {
     void initStore();
@@ -91,19 +93,7 @@ export function App() {
       )}
 
       <main className="flex flex-1 flex-col px-5 py-6">
-        {tab === 'pause' && (
-          <section className="flex flex-1 flex-col items-start justify-center py-8">
-            <p className="font-mono text-xs uppercase tracking-[0.14em] text-[var(--ink-muted)] tabular-nums">
-              {todayQuietMinutes.value} {copy.home.quietToday}
-            </p>
-            <h1 className="mt-4 font-serif text-4xl leading-[1.12] tracking-tight text-[var(--ink)] sm:text-5xl">
-              {copy.tagline}
-            </h1>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-[var(--ink-muted)]">
-              {copy.home.hint}
-            </p>
-          </section>
-        )}
+        {tab === 'pause' && <HomeView onStartUrge={() => setUrgeOpen(true)} />}
 
         {tab !== 'pause' && (
           <section className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-5">
@@ -146,6 +136,8 @@ export function App() {
           </div>
         </nav>
       )}
+
+      <UrgeSurfDialog open={urgeOpen} onOpenChange={setUrgeOpen} />
 
       <Dialog
         open={settingsOpen}
