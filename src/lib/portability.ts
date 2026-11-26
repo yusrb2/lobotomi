@@ -79,6 +79,10 @@ export function validateExportPayload(raw: unknown): ExportPayload | null {
         typeof rawSettings.hapticsEnabled === 'boolean'
           ? rawSettings.hapticsEnabled
           : DEFAULT_SETTINGS.hapticsEnabled,
+      soundClicksEnabled:
+        typeof rawSettings.soundClicksEnabled === 'boolean'
+          ? rawSettings.soundClicksEnabled
+          : DEFAULT_SETTINGS.soundClicksEnabled,
       defaultNoise:
         rawSettings.defaultNoise === 'brown' ||
         rawSettings.defaultNoise === 'pink' ||

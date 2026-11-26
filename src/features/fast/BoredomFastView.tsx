@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { FileText, Moon, Volume2, VolumeX } from 'lucide-preact';
+import { ZenStonesDoodle } from '../../components/Doodles';
 import { Button } from '../../components/ui/Button';
 import { Slider } from '../../components/ui/Slider';
 import { Switch } from '../../components/ui/Switch';
@@ -423,25 +424,28 @@ export function BoredomFastView() {
 
   return (
     <section className="space-y-7 py-2">
-      <div className="space-y-1.5 border-b border-[var(--border)] pb-4">
-        <h1 className="font-serif text-3xl tracking-tight text-[var(--ink)]">
-          {copy.fast.title}
-        </h1>
-        <p className="text-sm text-[var(--ink-muted)]">{copy.fast.subtitle}</p>
+      <div className="flex items-start justify-between gap-4 border-b border-dashed border-[var(--border)] pb-4">
+        <div className="space-y-1.5">
+          <h1 className="font-serif text-3xl tracking-tight text-[var(--ink)]">
+            {copy.fast.title}
+          </h1>
+          <p className="text-sm text-[var(--ink-muted)]">{copy.fast.subtitle}</p>
+        </div>
+        <ZenStonesDoodle className="h-12 w-12 shrink-0" />
       </div>
 
       <div className="space-y-2.5">
         <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--ink-muted)]">
           {copy.fast.duration}
         </p>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2.5">
           {FAST_DURATIONS.map((min) => (
             <button
               key={min}
               type="button"
               onClick={() => setDurationMin(min)}
               className={cn(
-                'h-12 rounded-[3px] border font-mono text-sm tabular-nums cursor-pointer',
+                'h-12 rounded-[10px] border-[1.5px] font-mono text-sm tabular-nums shadow-[0_2px_0_var(--card-shadow)] active:translate-y-[1px] active:shadow-none cursor-pointer',
                 durationMin === min
                   ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                   : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--surface-2)]'
@@ -476,7 +480,7 @@ export function BoredomFastView() {
         </div>
       </div>
 
-      <div className="divide-y divide-[var(--border)] rounded-[4px] border border-[var(--border)] bg-[var(--surface)]">
+      <div className="paper-card divide-y divide-dashed divide-[var(--border)]">
         <div className="flex items-center justify-between gap-4 p-4">
           <div className="space-y-0.5">
             <label htmlFor="fast-oled-switch" className="text-sm font-medium text-[var(--ink)]">

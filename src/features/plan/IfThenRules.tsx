@@ -71,7 +71,7 @@ export function IfThenRules() {
       </div>
 
       {rules.value.length === 0 ? (
-        <div className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-6 text-center text-xs text-[var(--ink-muted)]">
+        <div className="paper-note p-6 text-center text-xs text-[var(--ink-muted)]">
           {copy.plan.emptyRules}
         </div>
       ) : (
@@ -80,7 +80,7 @@ export function IfThenRules() {
             <article
               key={rule.id}
               className={cn(
-                'rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4 space-y-3 transition-opacity',
+                'paper-note p-4 space-y-3 transition-opacity',
                 !rule.active && 'opacity-60'
               )}
             >
@@ -91,7 +91,7 @@ export function IfThenRules() {
                   </span>
                   <p className="mt-0.5 text-sm leading-snug text-[var(--ink)]">{rule.trigger}</p>
                 </div>
-                <div className="border-t border-[var(--border)] pt-2">
+                <div className="border-t border-dashed border-[var(--border)] pt-2">
                   <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--accent)]">
                     {copy.plan.thenLabel}
                   </span>
@@ -99,7 +99,7 @@ export function IfThenRules() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between border-t border-[var(--border)] pt-2.5">
+              <div className="flex items-center justify-between border-t border-dashed border-[var(--border)] pt-2.5">
                 <div className="flex items-center gap-2.5">
                   <Switch
                     checked={rule.active}

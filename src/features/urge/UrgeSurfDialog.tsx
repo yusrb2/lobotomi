@@ -320,11 +320,11 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
       {phase === 'active' && (
         <div className="space-y-6">
           <div className="flex flex-col items-center py-4">
-            <div className="relative flex h-48 w-48 items-center justify-center">
-              <div className="absolute inset-0 rounded-full border border-[var(--border)]" />
+            <div className="relative flex h-52 w-52 items-center justify-center">
+              <div className="tea-ripple absolute inset-0 border-[1.5px] border-dashed border-[var(--border)]" />
               <div
                 className={cn(
-                  'h-44 w-44 rounded-full border border-[var(--accent)] bg-[var(--surface)] transition-transform ease-tactile',
+                  'tea-ripple h-48 w-48 border-2 border-[var(--accent)] bg-[var(--surface)] transition-transform ease-tactile',
                   ringScale,
                   ringDuration
                 )}

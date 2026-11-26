@@ -3,6 +3,7 @@ package com.lobotomi.app;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -10,7 +11,9 @@ public class BreathRingView extends View {
     private final Paint outerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint innerFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint innerStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Path morphPath = new Path();
     private float progressScale = 0.62f;
+    private float phaseAngle = 0f;
 
     public BreathRingView(Context context) {
         super(context);
@@ -31,23 +34,22 @@ public class BreathRingView extends View {
         float density = context.getResources().getDisplayMetrics().density;
 
         outerPaint.setStyle(Paint.Style.STROKE);
-        outerPaint.setStrokeWidth(1.25f * density);
-        outerPaint.setColor(0xFF2C2A27);
+        outerPaint.setStrokeWidth(1.5f * density);
+        outerPaint.setColor(0xFF36302B);
 
         innerFillPaint.setStyle(Paint.Style.FILL);
-        innerFillPaint.setColor(0xFF1C1B1A);
+        innerFillPaint.setColor(0xFF231F1C);
 
         innerStrokePaint.setStyle(Paint.Style.STROKE);
-        innerStrokePaint.setStrokeWidth(1.5f * density);
-        innerStrokePaint.setColor(0xFF7A9E84);
+        innerStrokePaint.setStrokeWidth(2.0f * density);
+        innerStrokePaint.setColor(0xFF84A98C);
     }
 
-    public void setProgressScale(float scale) {
+    public void setProgressScale(float scale, float angleRad) {
         float clamped = Math.max(0.55f, Math.min(1.0f, scale));
-        if (Math.abs(clamped - progressScale) > 0.001f) {
-            progressScale = clamped;
-            invalidate();
-        }
+        progressScale = clamped;
+        phaseAngle = angleRad;
+        invalidate();
     }
 
     @Override
@@ -55,12 +57,32 @@ public class BreathRingView extends View {
         super.onDraw(canvas);
         float cx = getWidth() / 2f;
         float cy = getHeight() / 2f;
-        float maxRadius = Math.min(cx, cy) - 8f;
+        float maxRadius = Math.min(cx, cy) - 10f;
         if (maxRadius <= 0f) return;
 
         canvas.drawCircle(cx, cy, maxRadius, outerPaint);
-        float innerRadius = maxRadius * 0.92f * progressScale;
-        canvas.drawCircle(cx, cy, innerRadius, innerFillPaint);
-        canvas.drawCircle(cx, cy, innerRadius, innerStrokePaint);
+
+        float baseRadius = maxRadius * 0.90f * progressScale;
+        morphPath.reset();
+        final int steps = 72;
+        for (int i = 0; i <= steps; i++) {
+            double theta = (Math.PI * 2.0 * i) / steps;
+            double wobble =
+                1.0 +
+                0.032 * Math.sin(theta * 3.0 + phaseAngle) +
+                0.022 * Math.cos(theta * 2.0 - phaseAngle * 0.7);
+            float r = (float) (baseRadius * wobble);
+            float x = cx + (float) Math.cos(theta) * r;
+            float y = cy + (float) Math.sin(theta) * r;
+            if (i == 0) {
+                morphPath.moveTo(x, y);
+            } else {
+                morphPath.lineTo(x, y);
+            }
+        }
+        morphPath.close();
+
+        canvas.drawPath(morphPath, innerFillPaint);
+        canvas.drawPath(morphPath, innerStrokePaint);
     }
 }

@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="gatekeeper_service_label">Penjaga Jeda Lobotomi</string>
+    <string name="accessibility_service_description">Lobotomi hanya mengecek nama paket aplikasi yang baru saja Anda buka untuk menampilkan layar jeda fokus 3 atau 5 menit pada aplikasi pilihan Anda. Layanan ini tidak pernah membaca isi layar, pesan, sandi, atau ketikan Anda, dan 100% berjalan lokal.</string>
+</resources>

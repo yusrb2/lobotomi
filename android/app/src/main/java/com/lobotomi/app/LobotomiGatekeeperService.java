@@ -2,6 +2,8 @@ package com.lobotomi.app;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
+import android.os.Build;
+import android.provider.Settings;
 import android.view.accessibility.AccessibilityEvent;
 
 public class LobotomiGatekeeperService extends AccessibilityService {
@@ -22,6 +24,10 @@ public class LobotomiGatekeeperService extends AccessibilityService {
             return;
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !Settings.canDrawOverlays(this)) {
+            return;
+        }
+
         GatekeeperStore.GuardedApp guarded = GatekeeperStore.getGuardedApp(this, packageName);
         if (guarded == null) return;
         if (GatekeeperStore.isWithinGracePeriod(this, packageName)) return;
@@ -38,7 +44,11 @@ public class LobotomiGatekeeperService extends AccessibilityService {
             Intent.FLAG_ACTIVITY_CLEAR_TOP |
             Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
         );
-        startActivity(intent);
+        try {
+            startActivity(intent);
+        } catch (Exception ignored) {
+            // Avoid background service crash if OS denies background activity start.
+        }
     }
 
     @Override

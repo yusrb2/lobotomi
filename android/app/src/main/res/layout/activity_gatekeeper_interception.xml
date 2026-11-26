@@ -3,7 +3,7 @@
     android:id="@+id/gatekeeper_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#131312"
+    android:background="#191614"
     android:orientation="vertical"
     android:paddingLeft="24dp"
     android:paddingTop="20dp"
@@ -22,25 +22,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="monospace"
-            android:letterSpacing="0.14"
-            android:text="LOBOTOMI · GATEKEEPER"
+            android:letterSpacing="0.12"
+            android:text="LOBOTOMI · TEA BREAK"
             android:textAllCaps="true"
-            android:textColor="#969185"
+            android:textColor="#A69A8D"
             android:textSize="11sp" />
 
         <Button
             android:id="@+id/gk_mute_btn"
             android:layout_width="wrap_content"
-            android:layout_height="34dp"
+            android:layout_height="36dp"
             android:background="@drawable/bg_gatekeeper_card"
             android:fontFamily="monospace"
             android:minWidth="0dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
             android:stateListAnimator="@null"
             android:text="MUTE"
             android:textAllCaps="true"
-            android:textColor="#E6E2D8"
+            android:textColor="#EDE4D7"
             android:textSize="11sp" />
     </LinearLayout>
 
@@ -50,9 +50,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:fontFamily="serif"
-        android:lineSpacingMultiplier="1.08"
-        android:text="Pause before App"
-        android:textColor="#E6E2D8"
+        android:lineSpacingMultiplier="1.1"
+        android:text="Hey, pause before App"
+        android:textColor="#EDE4D7"
         android:textSize="30sp" />
 
     <FrameLayout
@@ -63,8 +63,8 @@
 
         <com.lobotomi.app.BreathRingView
             android:id="@+id/gk_breath_ring"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
+            android:layout_width="230dp"
+            android:layout_height="230dp"
             android:layout_gravity="center" />
 
         <LinearLayout
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
                 android:text="03:00"
-                android:textColor="#E6E2D8"
+                android:textColor="#EDE4D7"
                 android:textSize="34sp" />
 
             <TextView
@@ -89,9 +89,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:fontFamily="sans-serif"
-                android:text="Inhale steadily"
-                android:textColor="#969185"
-                android:textSize="12sp" />
+                android:text="Breathe in gently"
+                android:textColor="#A69A8D"
+                android:textSize="13sp" />
         </LinearLayout>
     </FrameLayout>
 
@@ -108,10 +108,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:letterSpacing="0.14"
-            android:text="OBSERVATION"
+            android:letterSpacing="0.12"
+            android:text="A SMALL NOTE"
             android:textAllCaps="true"
-            android:textColor="#7A9E84"
+            android:textColor="#84A98C"
             android:textSize="10sp" />
 
         <TextView
@@ -120,9 +120,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:fontFamily="sans-serif"
-            android:lineSpacingMultiplier="1.35"
-            android:textColor="#E6E2D8"
-            android:textSize="13sp" />
+            android:lineSpacingMultiplier="1.38"
+            android:textColor="#EDE4D7"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <Button
@@ -134,7 +134,7 @@
         android:stateListAnimator="@null"
         android:text="Put It Down &amp; Do Something Slow"
         android:textAllCaps="false"
-        android:textColor="#131312"
+        android:textColor="#191614"
         android:textSize="14sp" />
 
     <Button
@@ -148,7 +148,7 @@
         android:stateListAnimator="@null"
         android:text="Continue"
         android:textAllCaps="false"
-        android:textColor="#5E5B52"
+        android:textColor="#6E6257"
         android:textSize="13sp" />
 
 </LinearLayout>

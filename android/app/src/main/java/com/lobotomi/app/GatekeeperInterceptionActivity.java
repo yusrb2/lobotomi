@@ -36,17 +36,17 @@ public class GatekeeperInterceptionActivity extends AppCompatActivity {
     public static volatile String activePackage = "";
 
     private static final String[] REFLECTIONS_EN = {
-        "Nothing inside this feed changes in the next three minutes.",
-        "Muscle memory opened this app. You do not owe it your next twenty minutes.",
-        "Notice the itch to check. Let it peak without feeding it.",
-        "Boredom is a quiet baseline, not an emergency.",
+        "Your thumb moved faster than your brain again. Take a breath first.",
+        "Nothing inside this feed needs you in the next three minutes.",
+        "Let the itch crest and settle like steam off warm tea.",
+        "Boredom is just quiet air. You do not have to fill it right away.",
     };
 
     private static final String[] REFLECTIONS_ID = {
-        "Tidak ada hal mendesak yang berubah di dalam feed dalam tiga menit ke depan.",
-        "Refleks otot yang membuka aplikasi ini. Anda tidak berutang dua puluh menit ke depannya.",
-        "Amati dorongan untuk mengecek. Biarkan memuncak tanpa diberi makan.",
-        "Rasa bosan adalah ambang tenang, bukan keadaan darurat.",
+        "Jempolmu gerak lebih cepat dari pikiranmu lagi, ya? Sebentar, tarik napas dulu.",
+        "Tidak ada hal mendesak di dalam feed dalam tiga menit ke depan.",
+        "Biarkan dorongannya surut pelan, seperti uap teh hangat yang menghilang.",
+        "Rasa bosan cuma ruang kosong yang tenang—tidak harus langsung diisi.",
     };
 
     private String targetPackage = "";
@@ -119,6 +119,7 @@ public class GatekeeperInterceptionActivity extends AppCompatActivity {
             return insets;
         });
 
+        TextView eyebrowView = findViewById(R.id.gk_eyebrow);
         TextView titleView = findViewById(R.id.gk_title);
         TextView promptLabelView = findViewById(R.id.gk_prompt_label);
         TextView promptTextView = findViewById(R.id.gk_prompt_text);
@@ -131,19 +132,20 @@ public class GatekeeperInterceptionActivity extends AppCompatActivity {
 
         timerView.setFontFeatureSettings("tnum");
 
+        eyebrowView.setText(isIndonesian ? "LOBOTOMI · JEDA TEH" : "LOBOTOMI · TEA BREAK");
         titleView.setText(
             isIndonesian
-                ? "Jeda sebelum membuka " + targetAppName
-                : "Pause before " + targetAppName
+                ? "Sebentar, tarik napas sebelum buka " + targetAppName
+                : "Hey, pause for a sec before " + targetAppName
         );
         slowBtn.setText(
             isIndonesian
-                ? "Letakkan & Pilih Aktivitas Lambat"
+                ? "Taruh Ponsel & Cari Aktivitas Santai"
                 : "Put It Down & Do Something Slow"
         );
 
         String chosenPrompt = pickPrompt();
-        promptLabelView.setText(isIndonesian ? "PENGAMATAN" : "OBSERVATION");
+        promptLabelView.setText(isIndonesian ? "CATATAN KECIL" : "A SMALL NOTE");
         promptTextView.setText(chosenPrompt);
 
         String soundMode = GatekeeperStore.getAmbientSound(this);
@@ -158,7 +160,7 @@ public class GatekeeperInterceptionActivity extends AppCompatActivity {
             updateMuteButtonText();
         });
         if ("silent".equals(soundMode)) {
-            muteBtn.setText(isIndonesian ? "BISU" : "SILENT");
+            muteBtn.setText(isIndonesian ? "SENYAP" : "SILENT");
             muteBtn.setEnabled(false);
             muteBtn.setAlpha(0.55f);
         }
@@ -193,7 +195,7 @@ public class GatekeeperInterceptionActivity extends AppCompatActivity {
 
     private void updateMuteButtonText() {
         if (audioSynth.isMuted()) {
-            muteBtn.setText(isIndonesian ? "SUARA MATI" : "UNMUTE");
+            muteBtn.setText(isIndonesian ? "NYALAKAN" : "UNMUTE");
         } else {
             muteBtn.setText(isIndonesian ? "BISUKAN" : "MUTE");
         }
@@ -207,8 +209,8 @@ public class GatekeeperInterceptionActivity extends AppCompatActivity {
 
         timerView.setText(formatClock(remainingSec));
 
-        // 11-second physiological sigh cycle: 4s inhale -> 1s top-up -> 6s exhale
-        double cycleSec = (elapsedMs / 1000.0) % 11.0;
+        double elapsedSec = elapsedMs / 1000.0;
+        double cycleSec = elapsedSec % 11.0;
         int phase;
         float scale;
         if (cycleSec < 4.0) {
@@ -225,21 +227,21 @@ public class GatekeeperInterceptionActivity extends AppCompatActivity {
             scale = 1.0f - t * 0.38f;
         }
 
-        breathRingView.setProgressScale(scale);
+        breathRingView.setProgressScale(scale, (float) (elapsedSec * 0.85));
 
         if (phase != lastBreathPhase) {
             lastBreathPhase = phase;
             if (phase == 0) {
-                breathLabelView.setText(isIndonesian ? "Tarik napas stabil" : "Inhale steadily");
+                breathLabelView.setText(isIndonesian ? "Tarik napas pelan" : "Breathe in gently");
                 pulseHaptic(false);
             } else if (phase == 1) {
                 breathLabelView.setText(
-                    isIndonesian ? "Tarik singkat tambahan" : "Short top-up inhale"
+                    isIndonesian ? "Tambah sedikit lagi" : "One tiny sip of air"
                 );
                 pulseHaptic(true);
             } else {
                 breathLabelView.setText(
-                    isIndonesian ? "Hembuskan perlahan" : "Long slow exhale"
+                    isIndonesian ? "Hembuskan santai" : "Let it all out slowly"
                 );
                 pulseHaptic(false);
             }
@@ -248,18 +250,18 @@ public class GatekeeperInterceptionActivity extends AppCompatActivity {
         if (remainingMs <= 0L && !unlocked) {
             unlocked = true;
             continueBtn.setEnabled(true);
-            continueBtn.setTextColor(0xFFE6E2D8);
+            continueBtn.setTextColor(0xFFEDE4D7);
             continueBtn.setText(
-                isIndonesian ? "Lanjut ke " + targetAppName : "Continue to " + targetAppName
+                isIndonesian ? "Lanjut buka " + targetAppName : "Continue to " + targetAppName
             );
             pulseHaptic(true);
         } else if (!unlocked) {
             String clock = formatClock(remainingSec);
             continueBtn.setEnabled(false);
-            continueBtn.setTextColor(0xFF5E5B52);
+            continueBtn.setTextColor(0xFF6E6257);
             continueBtn.setText(
                 isIndonesian
-                    ? "Lanjut ke " + targetAppName + " (" + clock + ")"
+                    ? "Lanjut buka " + targetAppName + " (" + clock + ")"
                     : "Continue to " + targetAppName + " (" + clock + ")"
             );
         }
@@ -293,7 +295,6 @@ public class GatekeeperInterceptionActivity extends AppCompatActivity {
         isVisible = false;
         activePackage = "";
 
-        // Return home first so target app leaves foreground, then open Lobotomi Low-Dopamine Menu.
         Intent home = new Intent(Intent.ACTION_MAIN);
         home.addCategory(Intent.CATEGORY_HOME);
         home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -65,7 +65,7 @@ export function CalmDotMatrix() {
   };
 
   return (
-    <section className="space-y-4 rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4">
+    <section className="paper-card space-y-4 p-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div className="space-y-0.5">
           <h2 className="font-serif text-xl tracking-tight text-[var(--ink)]">
@@ -107,7 +107,7 @@ export function CalmDotMatrix() {
         })}
       </div>
 
-      <div className="flex items-center justify-between border-t border-[var(--border)] pt-2.5 font-mono text-[11px] text-[var(--ink-muted)] tabular-nums">
+      <div className="flex items-center justify-between border-t border-dashed border-[var(--border)] pt-2.5 font-mono text-[11px] text-[var(--ink-muted)] tabular-nums">
         <span>
           {selectedDay
             ? `${selectedDay.dateKey} — ${selectedDay.minutes} ${copy.ledger.inspectValue}`

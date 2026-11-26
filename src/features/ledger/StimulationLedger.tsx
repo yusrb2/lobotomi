@@ -111,7 +111,7 @@ export function StimulationLedger() {
   return (
     <div className="space-y-5">
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4 space-y-3">
+        <div className="paper-card p-4 space-y-3">
           <div className="flex items-center justify-between">
             <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--ink-muted)]">
               {copy.ledger.ratioTitle}
@@ -144,7 +144,7 @@ export function StimulationLedger() {
           </div>
         </div>
 
-        <div className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4 space-y-2">
+        <div className="paper-card p-4 space-y-2">
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--ink-muted)]">
             {copy.ledger.clarityAvgTitle}
           </p>
@@ -176,11 +176,11 @@ export function StimulationLedger() {
       </div>
 
       {timeline.length === 0 ? (
-        <div className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-6 text-center text-xs text-[var(--ink-muted)]">
+        <div className="paper-note p-6 text-center text-xs text-[var(--ink-muted)]">
           {copy.ledger.emptyEntries}
         </div>
       ) : (
-        <ul className="divide-y divide-[var(--border)] rounded-[4px] border border-[var(--border)] bg-[var(--surface)]">
+        <ul className="paper-card divide-y divide-dashed divide-[var(--border)]">
           {timeline.map((row) => {
             if (row.kind === 'session') {
               const s = row.data;

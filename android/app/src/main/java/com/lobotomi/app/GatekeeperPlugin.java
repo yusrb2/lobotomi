@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -151,6 +153,25 @@ public class GatekeeperPlugin extends Plugin {
         call.resolve(res);
     }
 
+    @PluginMethod
+    public void getDetailedPermissionStatus(PluginCall call) {
+        Context ctx = getContext();
+        boolean accessibilityEnabled = isAccessibilityServiceEnabled(ctx);
+        boolean overlayEnabled = Settings.canDrawOverlays(ctx);
+        boolean batteryOptimizationIgnored = false;
+        PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
+        if (pm != null) {
+            batteryOptimizationIgnored = pm.isIgnoringBatteryOptimizations(ctx.getPackageName());
+        }
+
+        JSObject res = new JSObject();
+        res.put("accessibilityEnabled", accessibilityEnabled);
+        res.put("overlayEnabled", overlayEnabled);
+        res.put("batteryOptimizationIgnored", batteryOptimizationIgnored);
+        res.put("androidSdkVersion", Build.VERSION.SDK_INT);
+        call.resolve(res);
+    }
+
     private static boolean isAccessibilityServiceEnabled(Context context) {
         int enabled = 0;
         try {
@@ -199,6 +220,35 @@ public class GatekeeperPlugin extends Plugin {
         );
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getContext().startActivity(intent);
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void openAppDetailsSettings(PluginCall call) {
+        Intent intent = new Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.parse("package:" + getContext().getPackageName())
+        );
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getContext().startActivity(intent);
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void requestIgnoreBatteryOptimization(PluginCall call) {
+        Context ctx = getContext();
+        try {
+            Intent intent = new Intent(
+                Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                Uri.parse("package:" + ctx.getPackageName())
+            );
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ctx.startActivity(intent);
+        } catch (Exception e) {
+            Intent fallback = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+            fallback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ctx.startActivity(fallback);
+        }
         call.resolve();
     }
 

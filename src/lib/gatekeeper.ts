@@ -1,4 +1,5 @@
 import { Capacitor, registerPlugin, type PluginListenerHandle } from '@capacitor/core';
+import { App as CapacitorApp } from '@capacitor/app';
 import type { GatekeeperAudioMode, GuardedAppConfig, Locale } from '../db/types';
 
 export interface InstalledAppInfo {
@@ -10,6 +11,13 @@ export interface InstalledAppInfo {
 export interface GatekeeperPermissionStatus {
   accessibility: boolean;
   overlay: boolean;
+}
+
+export interface DetailedPermissionStatus {
+  accessibilityEnabled: boolean;
+  overlayEnabled: boolean;
+  batteryOptimizationIgnored: boolean;
+  androidSdkVersion: number;
 }
 
 export interface GatekeeperPendingEvent {
@@ -38,8 +46,11 @@ interface GatekeeperNativePlugin {
     hapticsEnabled: boolean;
   }): Promise<void>;
   getPermissionStatus(): Promise<GatekeeperPermissionStatus>;
+  getDetailedPermissionStatus(): Promise<DetailedPermissionStatus>;
   openAccessibilitySettings(): Promise<void>;
   openOverlaySettings(): Promise<void>;
+  openAppDetailsSettings(): Promise<void>;
+  requestIgnoreBatteryOptimization(): Promise<void>;
   consumePendingData(): Promise<GatekeeperPendingData>;
   addListener(
     eventName: 'gatekeeperRoute',
@@ -66,6 +77,18 @@ export async function getPermissionStatus(): Promise<GatekeeperPermissionStatus>
   return Gatekeeper.getPermissionStatus();
 }
 
+export async function getDetailedPermissionStatus(): Promise<DetailedPermissionStatus> {
+  if (!isAndroidNative()) {
+    return {
+      accessibilityEnabled: false,
+      overlayEnabled: false,
+      batteryOptimizationIgnored: false,
+      androidSdkVersion: 0,
+    };
+  }
+  return Gatekeeper.getDetailedPermissionStatus();
+}
+
 export async function saveGuardedAppsToNative(payload: {
   apps: GuardedAppConfig[];
   prompts: string[];
@@ -87,6 +110,16 @@ export async function openOverlaySettings(): Promise<void> {
   await Gatekeeper.openOverlaySettings();
 }
 
+export async function openAppDetailsSettings(): Promise<void> {
+  if (!isAndroidNative()) return;
+  await Gatekeeper.openAppDetailsSettings();
+}
+
+export async function requestIgnoreBatteryOptimization(): Promise<void> {
+  if (!isAndroidNative()) return;
+  await Gatekeeper.requestIgnoreBatteryOptimization();
+}
+
 export async function consumePendingData(): Promise<GatekeeperPendingData> {
   if (!isAndroidNative()) {
     return { events: [], route: '' };
@@ -100,6 +133,16 @@ export async function onGatekeeperRoute(
   if (!isAndroidNative()) return null;
   const handle = await Gatekeeper.addListener('gatekeeperRoute', (data) => {
     if (data?.route) callback(data.route);
+  });
+  return () => handle.remove();
+}
+
+export async function onAppResume(
+  callback: () => void
+): Promise<(() => Promise<void>) | null> {
+  if (!Capacitor.isNativePlatform()) return null;
+  const handle = await CapacitorApp.addListener('appStateChange', ({ isActive }) => {
+    if (isActive) callback();
   });
   return () => handle.remove();
 }

@@ -4,6 +4,6 @@
     <string name="title_activity_main">Lobotomi</string>
     <string name="package_name">com.lobotomi.app</string>
     <string name="custom_url_scheme">com.lobotomi.app</string>
-    <string name="gatekeeper_service_label">Lobotomi Gatekeeper</string>
-    <string name="gatekeeper_service_description">Detects when a guarded application enters the foreground so Lobotomi can insert a 3 or 5 minute pause. Screen contents and keystrokes are never read or transmitted.</string>
+    <string name="gatekeeper_service_label">Lobotomi Pause Guard</string>
+    <string name="accessibility_service_description">Lobotomi only checks the package name of the app you just opened so it can show a 3 or 5 minute pause screen for apps you selected. It never reads screen text, messages, passwords, or keystrokes, and never sends data off your device.</string>
 </resources>

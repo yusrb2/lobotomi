@@ -1,19 +1,20 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
-import { RefreshCw, Search, ShieldCheck, ShieldAlert, Play } from 'lucide-preact';
+import { Play, RefreshCw, Search } from 'lucide-preact';
+import { WoodenLatchDoodle } from '../../components/Doodles';
 import { Button } from '../../components/ui/Button';
 import { Switch } from '../../components/ui/Switch';
 import type { GatekeeperAudioMode, GuardedAppConfig } from '../../db/types';
 import { cn } from '../../lib/cn';
 import {
+  getDetailedPermissionStatus,
   getInstalledApps,
-  getPermissionStatus,
   isAndroidNative,
-  openAccessibilitySettings,
-  openOverlaySettings,
-  type GatekeeperPermissionStatus,
+  onAppResume,
+  type DetailedPermissionStatus,
   type InstalledAppInfo,
 } from '../../lib/gatekeeper';
 import { dict, gatekeeperConfig, updateGatekeeperConfig } from '../../state/store';
+import { PermissionSetupWizard } from './PermissionSetupWizard';
 import { WebGatekeeperPractice } from './WebGatekeeperPractice';
 
 const WEB_PRESETS = ['YouTube', 'Instagram', 'TikTok', 'X', 'Reddit'] as const;
@@ -23,9 +24,11 @@ export function GatekeeperView() {
   const cfg = gatekeeperConfig.value;
   const nativeAndroid = isAndroidNative();
 
-  const [perms, setPerms] = useState<GatekeeperPermissionStatus>({
-    accessibility: false,
-    overlay: false,
+  const [perms, setPerms] = useState<DetailedPermissionStatus>({
+    accessibilityEnabled: false,
+    overlayEnabled: false,
+    batteryOptimizationIgnored: false,
+    androidSdkVersion: 34,
   });
   const [apps, setApps] = useState<InstalledAppInfo[]>([]);
   const [loadingApps, setLoadingApps] = useState(false);
@@ -36,7 +39,7 @@ export function GatekeeperView() {
 
   const refreshPermissions = async () => {
     if (!nativeAndroid) return;
-    const status = await getPermissionStatus();
+    const status = await getDetailedPermissionStatus();
     setPerms(status);
   };
 
@@ -56,9 +59,18 @@ export function GatekeeperView() {
     };
     document.addEventListener('visibilitychange', handleVisibility);
     window.addEventListener('focus', handleVisibility);
+
+    let removeResume: (() => Promise<void>) | null = null;
+    void onAppResume(() => {
+      void refreshPermissions();
+    }).then((fn) => {
+      removeResume = fn;
+    });
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibility);
       window.removeEventListener('focus', handleVisibility);
+      if (removeResume) void removeResume();
     };
   }, [nativeAndroid]);
 
@@ -116,19 +128,19 @@ export function GatekeeperView() {
 
   return (
     <section className="space-y-6 py-2">
-      <div className="space-y-1.5 border-b border-[var(--border)] pb-4">
-        <h1 className="font-serif text-3xl tracking-tight text-[var(--ink)]">
-          {copy.gatekeeper.title}
-        </h1>
-        <p className="text-sm text-[var(--ink-muted)]">{copy.gatekeeper.subtitle}</p>
+      <div className="flex items-start justify-between gap-4 border-b border-dashed border-[var(--border)] pb-4">
+        <div className="space-y-1.5">
+          <h1 className="font-serif text-3xl tracking-tight text-[var(--ink)]">
+            {copy.gatekeeper.title}
+          </h1>
+          <p className="text-sm text-[var(--ink-muted)]">{copy.gatekeeper.subtitle}</p>
+        </div>
+        <WoodenLatchDoodle className="h-11 w-11 shrink-0" />
       </div>
 
       {nativeAndroid ? (
-        <div className="space-y-3 rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4">
-          <div className="flex items-center justify-between gap-2">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--ink-muted)]">
-              {copy.gatekeeper.permissionsTitle}
-            </p>
+        <div className="space-y-3">
+          <div className="flex items-center justify-end gap-2">
             <button
               type="button"
               onClick={() => void refreshPermissions()}
@@ -138,77 +150,23 @@ export function GatekeeperView() {
               <span>{copy.gatekeeper.refreshStatus}</span>
             </button>
           </div>
-
-          <p className="text-xs leading-relaxed text-[var(--ink-muted)]">
-            {copy.gatekeeper.permissionsPrivacy}
-          </p>
-
-          <div className="grid gap-2.5 sm:grid-cols-2">
-            <div className="flex items-center justify-between gap-3 rounded-[3px] border border-[var(--border)] bg-[var(--bg)] p-3">
-              <div className="space-y-1">
-                <p className="text-xs font-medium text-[var(--ink)]">
-                  {copy.gatekeeper.accessibilityLabel}
-                </p>
-                <span
-                  className={cn(
-                    'inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.1em]',
-                    perms.accessibility ? 'text-[var(--accent)]' : 'text-[var(--warn)]'
-                  )}
-                >
-                  {perms.accessibility ? (
-                    <ShieldCheck className="h-3 w-3" strokeWidth={1.5} />
-                  ) : (
-                    <ShieldAlert className="h-3 w-3" strokeWidth={1.5} />
-                  )}
-                  {perms.accessibility
-                    ? copy.gatekeeper.activeBadge
-                    : copy.gatekeeper.requiredBadge}
-                </span>
-              </div>
-              <Button
-                variant={perms.accessibility ? 'secondary' : 'primary'}
-                size="sm"
-                onClick={() => void openAccessibilitySettings()}
-              >
-                {copy.gatekeeper.grantAccessibility}
-              </Button>
-            </div>
-
-            <div className="flex items-center justify-between gap-3 rounded-[3px] border border-[var(--border)] bg-[var(--bg)] p-3">
-              <div className="space-y-1">
-                <p className="text-xs font-medium text-[var(--ink)]">
-                  {copy.gatekeeper.overlayLabel}
-                </p>
-                <span
-                  className={cn(
-                    'inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.1em]',
-                    perms.overlay ? 'text-[var(--accent)]' : 'text-[var(--warn)]'
-                  )}
-                >
-                  {perms.overlay ? (
-                    <ShieldCheck className="h-3 w-3" strokeWidth={1.5} />
-                  ) : (
-                    <ShieldAlert className="h-3 w-3" strokeWidth={1.5} />
-                  )}
-                  {perms.overlay
-                    ? copy.gatekeeper.activeBadge
-                    : copy.gatekeeper.requiredBadge}
-                </span>
-              </div>
-              <Button
-                variant={perms.overlay ? 'secondary' : 'primary'}
-                size="sm"
-                onClick={() => void openOverlaySettings()}
-              >
-                {copy.gatekeeper.grantOverlay}
-              </Button>
-            </div>
-          </div>
+          <PermissionSetupWizard status={perms} />
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setPracticeTarget(cfg.apps[0]?.appName || 'Instagram');
+              setPracticeOpen(true);
+            }}
+            className="w-full"
+          >
+            <Play className="h-4 w-4" strokeWidth={1.5} />
+            <span>{copy.gatekeeper.previewScreen}</span>
+          </Button>
         </div>
       ) : (
-        <div className="space-y-4 rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4">
+        <div className="paper-card space-y-4 p-4 sm:p-5">
           <div className="space-y-1">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--accent)]">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--accent)]">
               {copy.gatekeeper.webModeTitle}
             </p>
             <p className="text-xs leading-relaxed text-[var(--ink-muted)]">
@@ -230,7 +188,7 @@ export function GatekeeperView() {
                   type="button"
                   onClick={() => setPracticeTarget(preset)}
                   className={cn(
-                    'rounded-[2px] border px-2.5 py-1 font-mono text-[11px] cursor-pointer',
+                    'rounded-[8px] border-[1.5px] px-2.5 py-1 font-mono text-[11px] cursor-pointer',
                     practiceTarget === preset
                       ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                       : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)]'
@@ -245,7 +203,7 @@ export function GatekeeperView() {
               type="text"
               value={practiceTarget}
               onInput={(e) => setPracticeTarget((e.target as HTMLInputElement).value)}
-              className="h-10 w-full rounded-[3px] border border-[var(--border)] bg-[var(--bg)] px-3 text-sm text-[var(--ink)] focus:border-[var(--accent)] focus:outline-none"
+              className="h-10 w-full rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg)] px-3 text-sm text-[var(--ink)] focus:border-[var(--accent)] focus:outline-none"
             />
           </div>
 
@@ -261,8 +219,8 @@ export function GatekeeperView() {
         </div>
       )}
 
-      <div className="space-y-4 rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4">
-        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--ink-muted)]">
+      <div className="paper-card space-y-4 p-4 sm:p-5">
+        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--ink-muted)]">
           {copy.gatekeeper.defaultsTitle}
         </p>
 
@@ -278,7 +236,7 @@ export function GatekeeperView() {
                   type="button"
                   onClick={() => void updateGatekeeperConfig({ defaultDelaySeconds: sec })}
                   className={cn(
-                    'h-9 rounded-[3px] border font-mono text-xs tabular-nums cursor-pointer',
+                    'h-9 rounded-[8px] border-[1.5px] font-mono text-xs tabular-nums cursor-pointer',
                     cfg.defaultDelaySeconds === sec
                       ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                       : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink)]'
@@ -301,7 +259,7 @@ export function GatekeeperView() {
                   type="button"
                   onClick={() => void updateGatekeeperConfig({ defaultGraceMinutes: min })}
                   className={cn(
-                    'h-9 rounded-[3px] border font-mono text-xs tabular-nums cursor-pointer',
+                    'h-9 rounded-[8px] border-[1.5px] font-mono text-xs tabular-nums cursor-pointer',
                     cfg.defaultGraceMinutes === min
                       ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                       : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink)]'
@@ -331,7 +289,7 @@ export function GatekeeperView() {
                 type="button"
                 onClick={() => void updateGatekeeperConfig({ ambientSound: mode })}
                 className={cn(
-                  'h-9 rounded-[3px] border font-mono text-xs cursor-pointer',
+                  'h-9 rounded-[8px] border-[1.5px] font-mono text-xs cursor-pointer',
                   cfg.ambientSound === mode
                     ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                     : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)]'
@@ -353,21 +311,9 @@ export function GatekeeperView() {
               </h2>
               <p className="text-xs text-[var(--ink-muted)]">{copy.gatekeeper.appsSubtitle}</p>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="font-mono text-xs text-[var(--accent)] tabular-nums">
-                {cfg.apps.length} {copy.gatekeeper.guardedCount}
-              </span>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  setPracticeTarget('Instagram');
-                  setPracticeOpen(true);
-                }}
-              >
-                {copy.gatekeeper.previewScreen}
-              </Button>
-            </div>
+            <span className="font-mono text-xs font-bold text-[var(--accent)] tabular-nums">
+              {cfg.apps.length} {copy.gatekeeper.guardedCount}
+            </span>
           </div>
 
           <div className="relative">
@@ -380,20 +326,20 @@ export function GatekeeperView() {
               value={search}
               onInput={(e) => setSearch((e.target as HTMLInputElement).value)}
               placeholder={copy.gatekeeper.searchPlaceholder}
-              className="h-10 w-full rounded-[3px] border border-[var(--border)] bg-[var(--surface)] pl-9 pr-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none"
+              className="h-10 w-full rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] pl-9 pr-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none"
             />
           </div>
 
           {loadingApps ? (
-            <div className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-6 text-center font-mono text-xs text-[var(--ink-muted)]">
+            <div className="paper-card p-6 text-center font-mono text-xs text-[var(--ink-muted)]">
               {copy.gatekeeper.loadingApps}
             </div>
           ) : filteredApps.length === 0 ? (
-            <div className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-6 text-center text-xs text-[var(--ink-muted)]">
+            <div className="paper-card p-6 text-center text-xs text-[var(--ink-muted)]">
               {copy.gatekeeper.emptyApps}
             </div>
           ) : (
-            <ul className="divide-y divide-[var(--border)] rounded-[4px] border border-[var(--border)] bg-[var(--surface)]">
+            <ul className="paper-card divide-y divide-dashed divide-[var(--border)]">
               {filteredApps.map((app) => {
                 const guarded = guardedMap.get(app.packageName);
                 const enabled = Boolean(guarded);
@@ -405,13 +351,13 @@ export function GatekeeperView() {
                           <img
                             src={app.icon}
                             alt=""
-                            className="h-8 w-8 shrink-0 rounded-[3px] border border-[var(--border)] grayscale opacity-85"
+                            className="h-8 w-8 shrink-0 rounded-[8px] border border-[var(--border)] grayscale opacity-85"
                           />
                         ) : (
-                          <div className="h-8 w-8 shrink-0 rounded-[3px] border border-[var(--border)] bg-[var(--surface-2)]" />
+                          <div className="h-8 w-8 shrink-0 rounded-[8px] border border-[var(--border)] bg-[var(--surface-2)]" />
                         )}
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-medium text-[var(--ink)]">
+                          <p className="truncate text-sm font-semibold text-[var(--ink)]">
                             {app.appName}
                           </p>
                           <p className="truncate font-mono text-[10px] text-[var(--ink-muted)]">
@@ -427,7 +373,7 @@ export function GatekeeperView() {
                     </div>
 
                     {guarded && (
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border)] pt-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-dashed border-[var(--border)] pt-2">
                         <div className="flex items-center gap-1.5">
                           {([180, 300] as const).map((sec) => (
                             <button
@@ -437,7 +383,7 @@ export function GatekeeperView() {
                                 updateAppEntry(app.packageName, { delaySeconds: sec })
                               }
                               className={cn(
-                                'rounded-[2px] border px-2 py-0.5 font-mono text-[10px] tabular-nums cursor-pointer',
+                                'rounded-[6px] border px-2 py-0.5 font-mono text-[10px] tabular-nums cursor-pointer',
                                 guarded.delaySeconds === sec
                                   ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                                   : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)]'
@@ -457,7 +403,7 @@ export function GatekeeperView() {
                                 updateAppEntry(app.packageName, { graceMinutes: min })
                               }
                               className={cn(
-                                'rounded-[2px] border px-2 py-0.5 font-mono text-[10px] tabular-nums cursor-pointer',
+                                'rounded-[6px] border px-2 py-0.5 font-mono text-[10px] tabular-nums cursor-pointer',
                                 guarded.graceMinutes === min
                                   ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                                   : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)]'

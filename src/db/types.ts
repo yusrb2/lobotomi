@@ -83,6 +83,7 @@ export interface AppSettings {
   locale: Locale;
   theme: ThemeMode;
   hapticsEnabled: boolean;
+  soundClicksEnabled: boolean;
   defaultNoise: AmbientNoise;
   noiseVolume: number;
   chimeEnabled: boolean;

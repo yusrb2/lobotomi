@@ -116,7 +116,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </div>
         </div>
 
-        <div className="divide-y divide-[var(--border)] rounded-[4px] border border-[var(--border)] bg-[var(--surface)]">
+        <div className="paper-card divide-y divide-dashed divide-[var(--border)]">
           <div className="flex items-center justify-between gap-4 p-3.5">
             <div className="space-y-0.5">
               <label htmlFor="set-haptics" className="text-sm font-medium text-[var(--ink)]">
@@ -129,6 +129,21 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               checked={s.hapticsEnabled}
               onCheckedChange={(v) => void updateSettings({ hapticsEnabled: v })}
               ariaLabel={copy.settings.haptics}
+            />
+          </div>
+
+          <div className="flex items-center justify-between gap-4 p-3.5">
+            <div className="space-y-0.5">
+              <label htmlFor="set-clicks" className="text-sm font-medium text-[var(--ink)]">
+                {copy.settings.soundClicks}
+              </label>
+              <p className="text-xs text-[var(--ink-muted)]">{copy.settings.soundClicksDesc}</p>
+            </div>
+            <Switch
+              id="set-clicks"
+              checked={s.soundClicksEnabled}
+              onCheckedChange={(v) => void updateSettings({ soundClicksEnabled: v })}
+              ariaLabel={copy.settings.soundClicks}
             />
           </div>
 

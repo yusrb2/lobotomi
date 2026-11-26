@@ -4,6 +4,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   locale: 'en',
   theme: 'system',
   hapticsEnabled: true,
+  soundClicksEnabled: true,
   defaultNoise: 'off',
   noiseVolume: 0.35,
   chimeEnabled: true,

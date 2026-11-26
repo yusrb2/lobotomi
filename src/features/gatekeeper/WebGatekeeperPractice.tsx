@@ -61,7 +61,7 @@ export function WebGatekeeperPractice({
     if (active.length > 0) {
       const picked = active[Math.floor(Math.random() * active.length)];
       return settings.value.locale === 'id'
-        ? `JIKA ${picked.trigger} — MAKA ${picked.action}`
+        ? `KALAU ${picked.trigger} — MAKA ${picked.action}`
         : `IF ${picked.trigger} — THEN ${picked.action}`;
     }
     const pool = copy.gatekeeper.reflections;
@@ -189,22 +189,22 @@ export function WebGatekeeperPractice({
       role="dialog"
       aria-modal="true"
       aria-label={`${copy.gatekeeper.pauseBefore} ${targetAppName}`}
-      className="fixed inset-0 z-50 flex flex-col justify-between bg-[#131312] px-6 py-8 text-[#E6E2D8]"
+      className="fixed inset-0 z-50 flex flex-col justify-between bg-[#191614] px-6 py-8 text-[#EDE4D7]"
     >
       <div className="mx-auto flex w-full max-w-lg items-center justify-between">
-        <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#969185]">
-          LOBOTOMI · GATEKEEPER
+        <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#A69A8D]">
+          LOBOTOMI · TEA BREAK
         </span>
         <button
           type="button"
           onClick={toggleMute}
           disabled={ambientSound === 'silent'}
-          className="inline-flex h-8 items-center gap-1.5 rounded-[3px] border border-[#2C2A27] bg-[#1C1B1A] px-3 font-mono text-[11px] uppercase text-[#E6E2D8] disabled:opacity-50 cursor-pointer"
+          className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border-[1.5px] border-[#36302B] bg-[#231F1C] px-3 font-mono text-[11px] uppercase text-[#EDE4D7] disabled:opacity-50 cursor-pointer"
         >
           {muted ? (
-            <VolumeX className="h-3.5 w-3.5 text-[#969185]" strokeWidth={1.5} />
+            <VolumeX className="h-3.5 w-3.5 text-[#A69A8D]" strokeWidth={1.5} />
           ) : (
-            <Volume2 className="h-3.5 w-3.5 text-[#7A9E84]" strokeWidth={1.5} />
+            <Volume2 className="h-3.5 w-3.5 text-[#84A98C]" strokeWidth={1.5} />
           )}
           <span>
             {ambientSound === 'silent'
@@ -217,42 +217,42 @@ export function WebGatekeeperPractice({
       </div>
 
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-between py-6">
-        <h2 className="font-serif text-3xl leading-[1.1] tracking-tight text-[#E6E2D8]">
+        <h2 className="font-serif text-3xl leading-[1.1] tracking-tight text-[#EDE4D7]">
           {copy.gatekeeper.pauseBefore} {targetAppName}
         </h2>
 
         <div className="flex flex-col items-center justify-center py-6">
-          <div className="relative flex h-52 w-52 items-center justify-center">
-            <div className="absolute inset-0 rounded-full border border-[#2C2A27]" />
+          <div className="relative flex h-56 w-56 items-center justify-center">
+            <div className="tea-ripple absolute inset-0 border-[1.5px] border-dashed border-[#36302B]" />
             <div
               className={cn(
-                'h-48 w-48 rounded-full border border-[#7A9E84] bg-[#1C1B1A] transition-transform ease-tactile',
+                'tea-ripple h-52 w-52 border-2 border-[#84A98C] bg-[#231F1C] transition-transform ease-tactile',
                 ringScale,
                 ringDuration
               )}
             />
             <div className="relative z-10 text-center">
-              <p className="font-mono text-3xl tracking-tight text-[#E6E2D8] tabular-nums">
+              <p className="font-mono text-3xl tracking-tight text-[#EDE4D7] tabular-nums">
                 {formatClock(remainingSec)}
               </p>
-              <p className="mt-1.5 text-xs text-[#969185]">{breathText}</p>
+              <p className="mt-1.5 text-xs text-[#A69A8D]">{breathText}</p>
             </div>
           </div>
         </div>
 
         <div className="space-y-5">
-          <div className="rounded-[3px] border border-[#2C2A27] bg-[#1C1B1A] p-4 space-y-1.5">
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#7A9E84]">
+          <div className="rounded-[12px] border-[1.5px] border-dashed border-[#36302B] bg-[#231F1C] p-4 space-y-1.5">
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#84A98C]">
               {copy.gatekeeper.observationLabel}
             </p>
-            <p className="text-sm leading-relaxed text-[#E6E2D8]">{promptText}</p>
+            <p className="text-sm leading-relaxed text-[#EDE4D7]">{promptText}</p>
           </div>
 
           <div className="space-y-2.5">
             <button
               type="button"
               onClick={() => void handlePutItDown()}
-              className="h-12 w-full rounded-[3px] bg-[#7A9E84] px-4 text-sm font-medium text-[#131312] hover:opacity-92 cursor-pointer"
+              className="h-12 w-full rounded-[10px] bg-[#84A98C] px-4 text-sm font-semibold text-[#191614] shadow-[0_3px_0_#0F0D0C] active:translate-y-[2px] active:shadow-none cursor-pointer"
             >
               {copy.gatekeeper.putDownBtn}
             </button>
@@ -261,10 +261,10 @@ export function WebGatekeeperPractice({
               disabled={!unlocked}
               onClick={() => void handleContinue()}
               className={cn(
-                'h-12 w-full rounded-[3px] border px-4 text-sm font-mono tabular-nums',
+                'h-12 w-full rounded-[10px] border-[1.5px] px-4 text-sm font-mono tabular-nums',
                 unlocked
-                  ? 'border-[#7A9E84] bg-[#1C1B1A] text-[#E6E2D8] cursor-pointer'
-                  : 'border-[#2C2A27] bg-[#131312] text-[#5E5B52] cursor-not-allowed'
+                  ? 'border-[#84A98C] bg-[#231F1C] text-[#EDE4D7] cursor-pointer'
+                  : 'border-[#36302B] bg-[#191614] text-[#6E6257] cursor-not-allowed'
               )}
             >
               {copy.gatekeeper.continueBtn} {targetAppName}

@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   android: {
     allowMixedContent: false,
-    backgroundColor: '#F5F2EB',
+    backgroundColor: '#F7F1E5',
   },
 };
 

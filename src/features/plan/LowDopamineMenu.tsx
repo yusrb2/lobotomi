@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { Pencil, Plus, Shuffle, Trash2 } from 'lucide-preact';
+import { SproutDoodle } from '../../components/Doodles';
 import { Button } from '../../components/ui/Button';
 import { Dialog } from '../../components/ui/Dialog';
 import type { LowDopamineItem, MenuDuration, MenuEnergy } from '../../db/types';
@@ -105,13 +106,16 @@ export function LowDopamineMenu() {
   return (
     <div className="space-y-5">
       <div className="flex items-start justify-between gap-4">
-        <div className="space-y-1">
-          <h2 className="font-serif text-2xl tracking-tight text-[var(--ink)]">
-            {copy.plan.menuTitle}
-          </h2>
-          <p className="text-xs leading-relaxed text-[var(--ink-muted)]">
-            {copy.plan.menuSubtitle}
-          </p>
+        <div className="flex items-start gap-2.5">
+          <SproutDoodle className="h-10 w-10 shrink-0" />
+          <div className="space-y-1">
+            <h2 className="font-serif text-2xl tracking-tight text-[var(--ink)]">
+              {copy.plan.menuTitle}
+            </h2>
+            <p className="text-xs leading-relaxed text-[var(--ink-muted)]">
+              {copy.plan.menuSubtitle}
+            </p>
+          </div>
         </div>
         <Button variant="secondary" size="sm" onClick={openNew} className="shrink-0">
           <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
@@ -119,7 +123,7 @@ export function LowDopamineMenu() {
         </Button>
       </div>
 
-      <div className="space-y-3 rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-3.5">
+      <div className="paper-card space-y-3 p-4">
         <div className="space-y-1.5">
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--ink-muted)]">
             {copy.plan.durationFilter}
@@ -178,8 +182,8 @@ export function LowDopamineMenu() {
       </div>
 
       {pickedItem && (
-        <div className="rounded-[4px] border border-[var(--accent)] bg-[var(--surface)] p-4 space-y-2">
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--accent)]">
+        <div className="paper-card border-[var(--accent)] p-4 space-y-2">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--accent)]">
             {copy.plan.pickedHeading}
           </p>
           <p className="font-serif text-2xl leading-snug text-[var(--ink)]">
@@ -194,11 +198,11 @@ export function LowDopamineMenu() {
       )}
 
       {filtered.length === 0 ? (
-        <div className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-6 text-center text-xs text-[var(--ink-muted)]">
+        <div className="paper-note p-6 text-center text-xs text-[var(--ink-muted)]">
           {copy.plan.emptyMenu}
         </div>
       ) : (
-        <ul className="divide-y divide-[var(--border)] rounded-[4px] border border-[var(--border)] bg-[var(--surface)]">
+        <ul className="paper-card divide-y divide-dashed divide-[var(--border)]">
           {filtered.map((item) => (
             <li
               key={item.id}

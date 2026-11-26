@@ -63,7 +63,7 @@ export function BrainDump() {
           }}
           placeholder={copy.ledger.dumpPlaceholder}
           className={cn(
-            'w-full resize-y rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4 text-sm leading-relaxed text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none transition-opacity duration-500 ease-tactile',
+            'paper-note w-full resize-y p-4 text-sm leading-relaxed text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none transition-opacity duration-500 ease-tactile',
             dissolving ? 'opacity-0' : 'opacity-100'
           )}
         />
@@ -96,7 +96,7 @@ export function BrainDump() {
         </p>
 
         {dumps.value.length === 0 ? (
-          <div className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-5 text-center text-xs text-[var(--ink-muted)]">
+          <div className="paper-note p-5 text-center text-xs text-[var(--ink-muted)]">
             {copy.ledger.emptyArchive}
           </div>
         ) : (
@@ -104,7 +104,7 @@ export function BrainDump() {
             {dumps.value.map((dump) => (
               <li
                 key={dump.id}
-                className="flex items-start justify-between gap-3 rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-4"
+                className="paper-note flex items-start justify-between gap-3 p-4"
               >
                 <div className="min-w-0 space-y-1.5">
                   <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--ink)]">

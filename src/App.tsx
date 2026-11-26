@@ -24,7 +24,7 @@ import {
   type NavTab,
 } from './state/store';
 import { cn } from './lib/cn';
-import { onGatekeeperRoute } from './lib/gatekeeper';
+import { onAppResume, onGatekeeperRoute } from './lib/gatekeeper';
 import { HomeView } from './features/home/HomeView';
 import { UrgeSurfDialog } from './features/urge/UrgeSurfDialog';
 import { BoredomFastView } from './features/fast/BoredomFastView';
@@ -50,6 +50,13 @@ export function App() {
       removeRouteListener = fn;
     });
 
+    let removeAppResume: (() => Promise<void>) | null = null;
+    void onAppResume(() => {
+      void consumeNativeGatekeeperData();
+    }).then((fn) => {
+      removeAppResume = fn;
+    });
+
     const onResume = () => {
       if (document.visibilityState === 'visible') {
         void consumeNativeGatekeeperData();
@@ -61,6 +68,9 @@ export function App() {
       document.removeEventListener('visibilitychange', onResume);
       if (removeRouteListener) {
         void removeRouteListener();
+      }
+      if (removeAppResume) {
+        void removeAppResume();
       }
     };
   }, []);
@@ -90,7 +100,7 @@ export function App() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-2xl flex-col">
       {!oledOverride.value && (
-        <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3.5">
+        <header className="flex items-center justify-between border-b border-dashed border-[var(--border)] px-5 py-3.5">
           <div className="flex items-baseline gap-2.5">
             <span className="font-serif text-xl tracking-tight text-[var(--ink)]">
               {copy.appName}
@@ -104,7 +114,7 @@ export function App() {
               type="button"
               onClick={toggleLocale}
               aria-label="Toggle language"
-              className="inline-flex h-8 items-center justify-center rounded-[3px] border border-[var(--border)] bg-[var(--surface)] px-2.5 font-mono text-[11px] tracking-[0.1em] text-[var(--ink)] hover:bg-[var(--surface-2)] cursor-pointer"
+              className="inline-flex h-8 items-center justify-center rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] px-2.5 font-mono text-[11px] tracking-[0.08em] text-[var(--ink)] shadow-[0_2px_0_var(--card-shadow)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
             >
               {settings.value.locale === 'en' ? 'EN / ID' : 'ID / EN'}
             </button>
@@ -113,7 +123,7 @@ export function App() {
               onClick={cycleTheme}
               aria-label={copy.header.toggleTheme}
               title={copy.settings.themes[settings.value.theme]}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-[3px] border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] cursor-pointer"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)] shadow-[0_2px_0_var(--card-shadow)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
             >
               {theme === 'dark' ? (
                 <Moon className="h-4 w-4" strokeWidth={1.5} />
@@ -125,7 +135,7 @@ export function App() {
               type="button"
               onClick={() => setSettingsOpen(true)}
               aria-label={copy.header.settings}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-[3px] border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] cursor-pointer"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)] shadow-[0_2px_0_var(--card-shadow)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
             >
               <Settings className="h-4 w-4" strokeWidth={1.5} />
             </button>
@@ -144,7 +154,7 @@ export function App() {
       {!oledOverride.value && (
         <nav
           aria-label="Primary"
-          className="sticky bottom-0 border-t border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-[2px]"
+          className="sticky bottom-0 border-t border-dashed border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-[2px]"
         >
           <div className="mx-auto grid max-w-2xl grid-cols-5">
             {navItems.map(({ id, label, icon: Icon }) => {
