@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root,
+[data-theme="light"] {
+  --bg: #F5F2EB;
+  --surface: #EFECE4;
+  --surface-2: #E7E3D9;
+  --border: #DCD7CB;
+  --ink: #1C1B18;
+  --ink-muted: #5E5B52;
+  --accent: #3D5A45;
+  --accent-ink: #F5F2EB;
+  --warn: #9E473B;
+  --warn-ink: #F5F2EB;
+  --dot-0: #E7E3D9;
+  --dot-1: #BCC8BF;
+  --dot-2: #7A9E84;
+  --dot-3: #3D5A45;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #131312;
+  --surface: #1C1B1A;
+  --surface-2: #252422;
+  --border: #2C2A27;
+  --ink: #E6E2D8;
+  --ink-muted: #969185;
+  --accent: #7A9E84;
+  --accent-ink: #131312;
+  --warn: #C76D61;
+  --warn-ink: #131312;
+  --dot-0: #1C1B1A;
+  --dot-1: #2F4034;
+  --dot-2: #4E7058;
+  --dot-3: #7A9E84;
+  color-scheme: dark;
+}
+
+[data-theme="oled"] {
+  --bg: #000000;
+  --surface: #000000;
+  --surface-2: #0A0A09;
+  --border: #1C1B19;
+  --ink: #78746B;
+  --ink-muted: #52504B;
+  --accent: #5C7A65;
+  --accent-ink: #000000;
+  --warn: #8E4B42;
+  --warn-ink: #000000;
+  color-scheme: dark;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--border);
+  }
+
+  html,
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    transition:
+      background-color 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  body {
+    min-height: 100dvh;
+    margin: 0;
+    overscroll-behavior-y: contain;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    transition:
+      background-color 350ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 350ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 350ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 350ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :focus-visible {
+    outline: 1.5px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.ease-tactile {
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
