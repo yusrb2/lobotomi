@@ -98,6 +98,7 @@ export async function seedIfNeeded(): Promise<void> {
 export async function loadAllData(): Promise<{
   settings: AppSettings;
   gatekeeper: GatekeeperConfig;
+  onboardingCompleted: boolean;
   sessions: SessionRecord[];
   rules: IfThenRule[];
   menuItems: LowDopamineItem[];
@@ -106,15 +107,26 @@ export async function loadAllData(): Promise<{
 }> {
   await seedIfNeeded();
   const db = await getDB();
-  const [rawSettings, rawGatekeeper, sessions, rules, menuItems, ledger, dumps] = await Promise.all([
-    db.get('meta', 'settings') as Promise<Partial<AppSettings> | undefined>,
-    db.get('meta', 'gatekeeper') as Promise<Partial<GatekeeperConfig> | undefined>,
-    db.getAllFromIndex('sessions', 'by-startedAt'),
-    db.getAll('rules'),
-    db.getAll('menuItems'),
-    db.getAllFromIndex('ledger', 'by-createdAt'),
-    db.getAllFromIndex('dumps', 'by-createdAt'),
-  ]);
+  const [rawSettings, rawGatekeeper, rawOnboarding, sessions, rules, menuItems, ledger, dumps] =
+    await Promise.all([
+      db.get('meta', 'settings') as Promise<Partial<AppSettings> | undefined>,
+      db.get('meta', 'gatekeeper') as Promise<Partial<GatekeeperConfig> | undefined>,
+      db.get('meta', 'lobotomi_onboarding_completed') as Promise<boolean | undefined>,
+      db.getAllFromIndex('sessions', 'by-startedAt'),
+      db.getAll('rules'),
+      db.getAll('menuItems'),
+      db.getAllFromIndex('ledger', 'by-createdAt'),
+      db.getAllFromIndex('dumps', 'by-createdAt'),
+    ]);
+
+  let lsOnboarding = false;
+  try {
+    lsOnboarding =
+      typeof localStorage !== 'undefined' &&
+      localStorage.getItem('lobotomi_onboarding_completed') === 'true';
+  } catch {
+    lsOnboarding = false;
+  }
 
   return {
     settings: { ...DEFAULT_SETTINGS, ...(rawSettings ?? {}) },
@@ -123,6 +135,7 @@ export async function loadAllData(): Promise<{
       ...(rawGatekeeper ?? {}),
       apps: Array.isArray(rawGatekeeper?.apps) ? rawGatekeeper.apps : [],
     },
+    onboardingCompleted: Boolean(rawOnboarding) || lsOnboarding,
     sessions: sessions.sort((a, b) => b.startedAt - a.startedAt),
     rules: rules.sort((a, b) => b.createdAt - a.createdAt),
     menuItems: menuItems.sort((a, b) => a.createdAt - b.createdAt),
@@ -139,6 +152,11 @@ export async function saveSettingsDB(settings: AppSettings): Promise<void> {
 export async function saveGatekeeperDB(gatekeeper: GatekeeperConfig): Promise<void> {
   const db = await getDB();
   await db.put('meta', gatekeeper, 'gatekeeper');
+}
+
+export async function saveOnboardingCompletedDB(): Promise<void> {
+  const db = await getDB();
+  await db.put('meta', true, 'lobotomi_onboarding_completed');
 }
 
 export async function putSessionDB(session: SessionRecord): Promise<void> {

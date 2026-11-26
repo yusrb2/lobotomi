@@ -27,6 +27,7 @@ import {
   replaceAllDataDB,
   resetAllDataDB,
   saveGatekeeperDB,
+  saveOnboardingCompletedDB,
   saveSettingsDB,
 } from '../db/client';
 import { getDict } from '../i18n';
@@ -41,6 +42,7 @@ export type NavTab = 'pause' | 'fast' | 'guard' | 'plan' | 'ledger';
 export type PlanSubTab = 'rules' | 'menu';
 
 export const ready = signal(false);
+export const onboardingCompleted = signal(true);
 export const activeTab = signal<NavTab>('pause');
 export const planSubTab = signal<PlanSubTab>('rules');
 export const autoPickNonce = signal(0);
@@ -166,6 +168,7 @@ export async function initStore(): Promise<void> {
   const data = await loadAllData();
   settings.value = data.settings;
   gatekeeperConfig.value = data.gatekeeper;
+  onboardingCompleted.value = data.onboardingCompleted;
   sessions.value = data.sessions;
   rules.value = data.rules;
   menuItems.value = data.menuItems;
@@ -183,6 +186,16 @@ export async function initStore(): Promise<void> {
 
   await syncGatekeeperToNative();
   await consumeNativeGatekeeperData();
+}
+
+export function markOnboardingCompleted(): void {
+  onboardingCompleted.value = true;
+  try {
+    localStorage.setItem('lobotomi_onboarding_completed', 'true');
+  } catch {
+    // Ignore storage quota issues.
+  }
+  void saveOnboardingCompletedDB();
 }
 
 export async function updateSettings(patch: Partial<AppSettings>): Promise<void> {

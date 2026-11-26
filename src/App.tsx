@@ -3,6 +3,7 @@ import {
   BookOpen,
   Clock,
   Compass,
+  HelpCircle,
   Pause,
   Settings,
   Shield,
@@ -16,6 +17,7 @@ import {
   dict,
   initStore,
   oledOverride,
+  onboardingCompleted,
   ready,
   resolvedTheme,
   settings,
@@ -32,10 +34,12 @@ import { GatekeeperView } from './features/gatekeeper/GatekeeperView';
 import { PlanView } from './features/plan/PlanView';
 import { LedgerView } from './features/ledger/LedgerView';
 import { SettingsDialog } from './features/settings/SettingsDialog';
+import { InteractiveTutorialDialog } from './components/InteractiveTutorialDialog';
 
 export function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [urgeOpen, setUrgeOpen] = useState(false);
+  const [tutorialOpen, setTutorialOpen] = useState(false);
 
   useEffect(() => {
     void initStore();
@@ -74,6 +78,14 @@ export function App() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (!ready.value || onboardingCompleted.value) return;
+    const timer = window.setTimeout(() => {
+      setTutorialOpen(true);
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [ready.value, onboardingCompleted.value]);
 
   if (!ready.value) {
     return (
@@ -133,6 +145,15 @@ export function App() {
             </button>
             <button
               type="button"
+              onClick={() => setTutorialOpen(true)}
+              aria-label={copy.header.help}
+              title={copy.header.help}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)] shadow-[0_2px_0_var(--card-shadow)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
+            >
+              <HelpCircle className="h-4 w-4" strokeWidth={1.5} />
+            </button>
+            <button
+              type="button"
               onClick={() => setSettingsOpen(true)}
               aria-label={copy.header.settings}
               className="inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)] shadow-[0_2px_0_var(--card-shadow)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
@@ -187,6 +208,8 @@ export function App() {
       <UrgeSurfDialog open={urgeOpen} onOpenChange={setUrgeOpen} />
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+
+      <InteractiveTutorialDialog open={tutorialOpen} onOpenChange={setTutorialOpen} />
     </div>
   );
 }

@@ -1,4 +1,10 @@
-export function SteamingTeaDoodle({ className = 'h-12 w-12' }: { className?: string }) {
+export function SteamingTeaDoodle({
+  className = 'h-12 w-12',
+  animated = false,
+}: {
+  className?: string;
+  animated?: boolean;
+}) {
   return (
     <svg
       viewBox="0 0 64 64"
@@ -7,10 +13,27 @@ export function SteamingTeaDoodle({ className = 'h-12 w-12' }: { className?: str
       className={className}
     >
       <path
-        d="M22 17c-2-3 2-6 0-9M31 15c-2-3 2-6 0-9M40 17c-2-3 2-6 0-9"
+        d="M22 17c-2-3 2-6 0-9"
         stroke="var(--accent)"
         stroke-width="1.6"
         stroke-linecap="round"
+        className={animated ? 'animate-steam' : undefined}
+      />
+      <path
+        d="M31 15c-2-3 2-6 0-9"
+        stroke="var(--accent)"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        className={animated ? 'animate-steam' : undefined}
+        style={animated ? { animationDelay: '0.45s' } : undefined}
+      />
+      <path
+        d="M40 17c-2-3 2-6 0-9"
+        stroke="var(--accent)"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        className={animated ? 'animate-steam' : undefined}
+        style={animated ? { animationDelay: '0.9s' } : undefined}
       />
       <path
         d="M14 25h30c0 12-5 21-15 21s-15-9-15-21Z"
