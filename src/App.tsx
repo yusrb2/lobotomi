@@ -17,6 +17,7 @@ import { Dialog } from './components/ui/Dialog';
 import { HomeView } from './features/home/HomeView';
 import { UrgeSurfDialog } from './features/urge/UrgeSurfDialog';
 import { BoredomFastView } from './features/fast/BoredomFastView';
+import { PlanView } from './features/plan/PlanView';
 
 export function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -96,8 +97,9 @@ export function App() {
       <main className="flex flex-1 flex-col px-5 py-6">
         {tab === 'pause' && <HomeView onStartUrge={() => setUrgeOpen(true)} />}
         {tab === 'fast' && <BoredomFastView />}
+        {tab === 'plan' && <PlanView />}
 
-        {(tab === 'plan' || tab === 'ledger') && (
+        {tab === 'ledger' && (
           <section className="rounded-[4px] border border-[var(--border)] bg-[var(--surface)] p-5">
             <p className="font-mono text-xs uppercase tracking-[0.12em] text-[var(--ink-muted)]">
               {navItems.find((n) => n.id === tab)?.label}
