@@ -13,12 +13,12 @@ import {
   type NavTab,
 } from './state/store';
 import { cn } from './lib/cn';
-import { Dialog } from './components/ui/Dialog';
 import { HomeView } from './features/home/HomeView';
 import { UrgeSurfDialog } from './features/urge/UrgeSurfDialog';
 import { BoredomFastView } from './features/fast/BoredomFastView';
 import { PlanView } from './features/plan/PlanView';
 import { LedgerView } from './features/ledger/LedgerView';
+import { SettingsDialog } from './features/settings/SettingsDialog';
 
 export function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -137,14 +137,7 @@ export function App() {
 
       <UrgeSurfDialog open={urgeOpen} onOpenChange={setUrgeOpen} />
 
-      <Dialog
-        open={settingsOpen}
-        onOpenChange={setSettingsOpen}
-        title={copy.settings.title}
-        description={copy.settings.subtitle}
-      >
-        <p className="font-mono text-xs text-[var(--ink-muted)]">{copy.settings.licenseNote}</p>
-      </Dialog>
+      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
   );
 }
