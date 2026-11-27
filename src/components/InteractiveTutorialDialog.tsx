@@ -1,11 +1,13 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Bell, RefreshCw, Shuffle, Shield, Hand } from 'lucide-preact';
-import { SproutDoodle, SteamingTeaDoodle } from './Doodles';
+import { LoboMascot } from './LoboMascot';
+import { triggerConfetti } from './PaperConfetti';
 import { Button } from './ui/Button';
 import { audioEngine } from '../lib/audio';
 import { cn } from '../lib/cn';
 import { hapticComplete, hapticTap } from '../lib/native';
+import { playClick, playRoll, playStampUnlock } from '../lib/sound';
 import {
   activeTab,
   dict,
@@ -103,14 +105,16 @@ export function InteractiveTutorialDialog({
     if (clamped === step) return;
     setDirection(clamped > step ? 'next' : 'prev');
     setStep(clamped);
-    if (settings.value.soundClicksEnabled) {
-      audioEngine.playWoodTap();
-    }
+    playClick();
   };
 
-  const finishAndClose = (goToGatekeeper = false) => {
+  const finishAndClose = (goToGatekeeper = false, celebrate = false) => {
     stopBreathCycle();
     markOnboardingCompleted();
+    if (celebrate) {
+      triggerConfetti();
+      playStampUnlock();
+    }
     onOpenChange(false);
     if (goToGatekeeper) {
       activeTab.value = 'guard';
@@ -201,6 +205,7 @@ export function InteractiveTutorialDialog({
   const handleShuffleSlow = () => {
     const items = menuItems.value;
     if (items.length === 0) return;
+    playRoll();
     const pool =
       items.length > 1 && shuffledActivity
         ? items.filter((item) => item.title !== shuffledActivity)
@@ -273,15 +278,15 @@ export function InteractiveTutorialDialog({
       }}
     >
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-[#191614]/60 backdrop-blur-[2px]" />
+        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-[#161514]/60 backdrop-blur-[2px]" />
         <DialogPrimitive.Content
           aria-describedby={undefined}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
-          className="fixed left-1/2 top-1/2 z-50 flex w-[calc(100vw-2rem)] max-w-lg max-h-[90dvh] flex-col -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--bg)] text-[var(--ink)]  focus:outline-none"
+          className="fixed left-1/2 top-1/2 z-50 flex w-[calc(100vw-2rem)] max-w-lg max-h-[90dvh] flex-col -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border-2 border-[var(--border-card)] bg-[var(--bg)] text-[var(--ink)] shadow-[0_5px_0_var(--card-shadow-soft)] focus:outline-none"
         >
           {/* Top bar: Progress capsules + Skip */}
-          <div className="flex items-center justify-between gap-3 border-b border-[var(--border)] px-5 py-3.5">
+          <div className="flex items-center justify-between gap-3 border-b-2 border-dashed border-[var(--border)] px-5 py-3.5">
             <div className="flex items-center gap-1.5" role="tablist" aria-label="Tutorial steps">
               {Array.from({ length: TOTAL_STEPS }).map((_, idx) => {
                 const active = idx === step;
@@ -340,7 +345,7 @@ export function InteractiveTutorialDialog({
                         {tut.step1.title}
                       </DialogPrimitive.Title>
                     </div>
-                    <SteamingTeaDoodle animated className="h-14 w-14 shrink-0" />
+                    <LoboMascot mood="idle" pokeable size="sm" className="shrink-0" />
                   </div>
 
                   <p className="text-sm leading-relaxed text-[var(--ink-muted)]">
@@ -365,13 +370,20 @@ export function InteractiveTutorialDialog({
 
               {step === 1 && (
                 <>
-                  <div className="space-y-1">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
-                      {tut.step2.subtitle}
-                    </p>
-                    <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
-                      {tut.step2.title}
-                    </DialogPrimitive.Title>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
+                        {tut.step2.subtitle}
+                      </p>
+                      <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
+                        {tut.step2.title}
+                      </DialogPrimitive.Title>
+                    </div>
+                    <LoboMascot
+                      mood={breathPhase === 'done' ? 'celebrate' : 'urge'}
+                      size="sm"
+                      className="shrink-0"
+                    />
                   </div>
 
                   <p className="text-sm leading-relaxed text-[var(--ink-muted)]">
@@ -411,13 +423,16 @@ export function InteractiveTutorialDialog({
 
               {step === 2 && (
                 <>
-                  <div className="space-y-1">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
-                      {tut.step3.subtitle}
-                    </p>
-                    <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
-                      {tut.step3.title}
-                    </DialogPrimitive.Title>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
+                        {tut.step3.subtitle}
+                      </p>
+                      <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
+                        {tut.step3.title}
+                      </DialogPrimitive.Title>
+                    </div>
+                    <LoboMascot mood="fast" size="sm" className="shrink-0" />
                   </div>
 
                   <p className="text-sm leading-relaxed text-[var(--ink-muted)]">
@@ -460,7 +475,7 @@ export function InteractiveTutorialDialog({
                         {tut.step4.title}
                       </DialogPrimitive.Title>
                     </div>
-                    <SproutDoodle className="h-10 w-10 shrink-0" />
+                    <LoboMascot mood="idle" size="sm" className="shrink-0" />
                   </div>
 
                   <p className="text-sm leading-relaxed text-[var(--ink-muted)]">
@@ -520,13 +535,16 @@ export function InteractiveTutorialDialog({
 
               {step === 4 && (
                 <>
-                  <div className="space-y-1">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
-                      {tut.step5.subtitle}
-                    </p>
-                    <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
-                      {tut.step5.title}
-                    </DialogPrimitive.Title>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
+                        {tut.step5.subtitle}
+                      </p>
+                      <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
+                        {tut.step5.title}
+                      </DialogPrimitive.Title>
+                    </div>
+                    <LoboMascot mood="gatekeeper" size="sm" className="shrink-0" />
                   </div>
 
                   <p className="text-sm leading-relaxed text-[var(--ink-muted)]">
@@ -594,7 +612,7 @@ export function InteractiveTutorialDialog({
                 {tut.next}
               </Button>
             ) : (
-              <Button variant="primary" onClick={() => finishAndClose(false)}>
+              <Button variant="primary" onClick={() => finishAndClose(false, true)}>
                 {tut.start}
               </Button>
             )}
