@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { FileText, Moon, Volume2, VolumeX } from 'lucide-preact';
+import { LoboMascot } from '../../components/LoboMascot';
 import { ZenStonesDoodle } from '../../components/Doodles';
+import { triggerConfetti } from '../../components/PaperConfetti';
 import { Button } from '../../components/ui/Button';
 import { Slider } from '../../components/ui/Slider';
 import { Switch } from '../../components/ui/Switch';
@@ -8,10 +10,10 @@ import { audioEngine } from '../../lib/audio';
 import { cn } from '../../lib/cn';
 import {
   acquireKeepAwake,
-  hapticComplete,
   hapticTap,
   releaseKeepAwake,
 } from '../../lib/native';
+import { playStampUnlock } from '../../lib/sound';
 import type { AmbientNoise } from '../../db/types';
 import {
   addSession,
@@ -119,7 +121,8 @@ export function BoredomFastView() {
         if (chimeEnabled) {
           audioEngine.playSingingBowl();
         }
-        void hapticComplete(settings.value.hapticsEnabled);
+        triggerConfetti();
+        playStampUnlock();
         setCompletedNaturally(true);
         setClarityAfter(Math.max(1, clarityBefore - 1));
         setPhase('checkin');
@@ -240,7 +243,8 @@ export function BoredomFastView() {
           </button>
         </div>
 
-        <div className="flex flex-col items-center justify-center py-12 text-center">
+        <div className="flex flex-col items-center justify-center py-10 text-center">
+          {!oledEnabled && <LoboMascot mood="fast" size="md" className="mb-4" />}
           <p
             className={cn(
               'font-mono tracking-tight tabular-nums',
@@ -347,14 +351,17 @@ export function BoredomFastView() {
   if (phase === 'checkin') {
     return (
       <section className="mx-auto w-full max-w-lg space-y-6 py-4">
-        <div className="space-y-1 border-b border-[var(--border)] pb-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--accent-strong)]">
-            {completedNaturally ? copy.fast.completedNotice : copy.fast.endEarly}
-          </p>
-          <h2 className="font-serif text-3xl tracking-tight text-[var(--ink)]">
-            {copy.urge.checkinTitle}
-          </h2>
-          <p className="text-xs text-[var(--ink-muted)]">{copy.urge.checkinSubtitle}</p>
+        <div className="flex items-center justify-between gap-3 border-b border-[var(--border)] pb-4">
+          <div className="space-y-1">
+            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--accent-strong)]">
+              {completedNaturally ? copy.fast.completedNotice : copy.fast.endEarly}
+            </p>
+            <h2 className="font-serif text-3xl tracking-tight text-[var(--ink)]">
+              {copy.urge.checkinTitle}
+            </h2>
+            <p className="text-xs text-[var(--ink-muted)]">{copy.urge.checkinSubtitle}</p>
+          </div>
+          {completedNaturally && <LoboMascot mood="celebrate" size="sm" />}
         </div>
 
         <div className="space-y-2.5">

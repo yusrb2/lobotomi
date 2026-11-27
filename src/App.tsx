@@ -35,6 +35,7 @@ import { PlanView } from './features/plan/PlanView';
 import { LedgerView } from './features/ledger/LedgerView';
 import { SettingsDialog } from './features/settings/SettingsDialog';
 import { InteractiveTutorialDialog } from './components/InteractiveTutorialDialog';
+import { PaperConfetti } from './components/PaperConfetti';
 
 export function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -210,6 +211,8 @@ export function App() {
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
 
       <InteractiveTutorialDialog open={tutorialOpen} onOpenChange={setTutorialOpen} />
+
+      <PaperConfetti />
     </div>
   );
 }

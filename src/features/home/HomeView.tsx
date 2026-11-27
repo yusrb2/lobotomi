@@ -1,4 +1,4 @@
-import { SteamingTeaDoodle } from '../../components/Doodles';
+import { LoboMascot } from '../../components/LoboMascot';
 import { Button } from '../../components/ui/Button';
 import { dict, todayQuietMinutes } from '../../state/store';
 
@@ -22,13 +22,15 @@ export function HomeView({ onStartUrge }: HomeViewProps) {
     <section className="flex flex-1 flex-col justify-center py-8">
       <div className="space-y-8">
         <div className="space-y-3.5">
-          <SteamingTeaDoodle className="h-14 w-14" />
-          <p className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 font-mono text-xs uppercase tracking-[0.12em] text-[var(--ink-muted)] tabular-nums">
-            <span className="h-2 w-2 rounded-full bg-[var(--accent)]" aria-hidden="true" />
-            <span>
-              {todayQuietMinutes.value} {copy.home.quietToday}
-            </span>
-          </p>
+          <div className="flex items-end justify-between gap-4">
+            <p className="badge-sage inline-flex items-center gap-2 rounded-full px-3 py-1 font-mono text-xs uppercase tracking-[0.1em] tabular-nums">
+              <span className="h-2 w-2 rounded-full bg-[var(--accent-strong)]" aria-hidden="true" />
+              <span>
+                {todayQuietMinutes.value} {copy.home.quietToday}
+              </span>
+            </p>
+            <LoboMascot mood="idle" pokeable size="md" />
+          </div>
           <h1 className="font-serif text-4xl leading-[1.08] tracking-tight text-[var(--ink)] sm:text-5xl">
             {greeting}
           </h1>

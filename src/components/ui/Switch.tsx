@@ -1,5 +1,6 @@
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import { cn } from '../../lib/cn';
+import { playSwitch } from '../../lib/sound';
 
 interface SwitchProps {
   checked: boolean;
@@ -14,7 +15,10 @@ export function Switch({ checked, onCheckedChange, ariaLabel, id, className }: S
     <SwitchPrimitive.Root
       id={id}
       checked={checked}
-      onCheckedChange={onCheckedChange}
+      onCheckedChange={(next: boolean) => {
+        playSwitch(next);
+        onCheckedChange(next);
+      }}
       aria-label={ariaLabel}
       className={cn(
         'relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full border-2 border-[var(--border-card)] bg-[var(--surface-2)] p-0.5 data-[state=checked]:bg-[var(--accent)]',

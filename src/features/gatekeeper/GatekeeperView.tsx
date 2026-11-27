@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { Play, RefreshCw, Search } from 'lucide-preact';
-import { WoodenLatchDoodle } from '../../components/Doodles';
+import { LoboMascot } from '../../components/LoboMascot';
 import { Button } from '../../components/ui/Button';
 import { Switch } from '../../components/ui/Switch';
 import type { GatekeeperAudioMode, GuardedAppConfig } from '../../db/types';
@@ -135,7 +135,7 @@ export function GatekeeperView() {
           </h1>
           <p className="text-sm text-[var(--ink-muted)]">{copy.gatekeeper.subtitle}</p>
         </div>
-        <WoodenLatchDoodle className="h-11 w-11 shrink-0" />
+        <LoboMascot mood="gatekeeper" size="sm" className="shrink-0" />
       </div>
 
       {nativeAndroid ? (

@@ -1,7 +1,6 @@
 import type { JSX } from 'preact';
-import { audioEngine } from '../../lib/audio';
 import { cn } from '../../lib/cn';
-import { settings } from '../../state/store';
+import { playClick } from '../../lib/sound';
 
 export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'warn';
@@ -18,9 +17,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const handleClick: JSX.MouseEventHandler<HTMLButtonElement> = (e) => {
-    if (settings.value.soundClicksEnabled) {
-      audioEngine.playWoodTap();
-    }
+    playClick();
     if (typeof onClick === 'function') {
       onClick(e);
     }

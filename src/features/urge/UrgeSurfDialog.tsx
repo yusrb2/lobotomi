@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Volume2, VolumeX, FileText } from 'lucide-preact';
+import { LoboMascot } from '../../components/LoboMascot';
 import { Dialog } from '../../components/ui/Dialog';
 import { Button } from '../../components/ui/Button';
 import { Slider } from '../../components/ui/Slider';
 import { audioEngine } from '../../lib/audio';
+import { triggerConfetti } from '../../components/PaperConfetti';
 import { hapticComplete, hapticTap } from '../../lib/native';
+import { playStampUnlock } from '../../lib/sound';
 import { cn } from '../../lib/cn';
 import type { AmbientNoise, UrgeTrigger } from '../../db/types';
 import { addSession, dict, makeId, saveDump, settings } from '../../state/store';
@@ -126,6 +129,8 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
         }
         audioEngine.stopNoise();
         void hapticComplete(settings.value.hapticsEnabled);
+        triggerConfetti();
+        playStampUnlock();
         setClarityAfter(Math.max(1, clarityBefore - 1));
         setPhase('checkin');
       }
@@ -319,8 +324,9 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
 
       {phase === 'active' && (
         <div className="space-y-6">
-          <div className="flex flex-col items-center py-4">
-            <div className="relative flex h-52 w-52 items-center justify-center">
+          <div className="flex flex-col items-center gap-3 py-2">
+            <LoboMascot mood="urge" size="sm" />
+            <div className="relative flex h-48 w-48 items-center justify-center">
               <div className="tea-ripple absolute inset-0 border border-[var(--border)]" />
               <div
                 className={cn(
@@ -405,6 +411,9 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
 
       {phase === 'checkin' && (
         <div className="space-y-5">
+          <div className="flex justify-center">
+            <LoboMascot mood="celebrate" size="sm" />
+          </div>
           <div className="space-y-2">
             <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--ink-muted)]">
               {copy.urge.triggerLabel}
