@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { FileText, Moon, Volume2, VolumeX } from 'lucide-preact';
 import { LoboMascot } from '../../components/LoboMascot';
+import { RingTimer } from '../../components/RingTimer';
 import { ZenStonesDoodle } from '../../components/Doodles';
 import { triggerConfetti } from '../../components/PaperConfetti';
 import { Button } from '../../components/ui/Button';
@@ -26,7 +27,7 @@ import {
 
 type FastPhase = 'setup' | 'active' | 'checkin';
 
-const FAST_DURATIONS = [3, 5, 10, 15, 25, 45] as const;
+const QUICK_DURATIONS = [2, 5, 10, 25] as const;
 
 function formatClock(totalSeconds: number): string {
   const s = Math.max(0, Math.ceil(totalSeconds));
@@ -243,27 +244,29 @@ export function BoredomFastView() {
           </button>
         </div>
 
-        <div className="flex flex-col items-center justify-center py-10 text-center">
+        <div className="flex flex-col items-center justify-center py-8 text-center">
           {!oledEnabled && <LoboMascot mood="fast" size="md" className="mb-4" />}
-          <p
-            className={cn(
-              'font-mono tracking-tight tabular-nums',
-              oledEnabled
-                ? 'text-6xl text-[#78746B] sm:text-7xl'
-                : 'text-6xl text-[var(--ink)] sm:text-7xl'
-            )}
-          >
-            {formatClock(remainingSec)}
-          </p>
-          {oledEnabled && (
-            <p
-              className={cn(
-                'mt-5 font-mono text-[11px] tracking-[0.08em] text-[#52504B] transition-opacity duration-500',
-                controlsVisible ? 'opacity-100' : 'opacity-0'
-              )}
-            >
-              {copy.fast.tapHint}
-            </p>
+          {oledEnabled ? (
+            <>
+              <p className="font-mono text-6xl tracking-tight text-[#78746B] tabular-nums sm:text-7xl">
+                {formatClock(remainingSec)}
+              </p>
+              <p
+                className={cn(
+                  'mt-5 font-mono text-[11px] tracking-[0.08em] text-[#52504B] transition-opacity duration-500',
+                  controlsVisible ? 'opacity-100' : 'opacity-0'
+                )}
+              >
+                {copy.fast.tapHint}
+              </p>
+            </>
+          ) : (
+            <RingTimer
+              progress={progress}
+              timeText={formatClock(remainingSec)}
+              caption={`${Math.round(progress * 100)}%`}
+              size={220}
+            />
           )}
         </div>
 
@@ -441,24 +444,49 @@ export function BoredomFastView() {
         <ZenStonesDoodle className="h-12 w-12 shrink-0" />
       </div>
 
-      <div className="space-y-2.5">
-        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--ink-muted)]">
-          {copy.fast.duration}
-        </p>
-        <div className="grid grid-cols-3 gap-2.5">
-          {FAST_DURATIONS.map((min) => (
+      <div className="paper-card p-4 space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--ink-muted)]">
+            {copy.fast.duration}
+          </p>
+          <span className="badge-amber rounded-full px-2.5 py-0.5 font-mono text-xs font-semibold tabular-nums">
+            {durationMin} {copy.urge.min}
+          </span>
+        </div>
+
+        <div className="flex justify-center py-1">
+          <RingTimer
+            progress={durationMin / 45}
+            timeText={`${String(durationMin).padStart(2, '0')}:00`}
+            caption={copy.fast.scrubLabel}
+            size={176}
+            strokeWidth={7}
+          />
+        </div>
+
+        <Slider
+          value={durationMin}
+          onValueChange={setDurationMin}
+          min={1}
+          max={45}
+          step={1}
+          ariaLabel={copy.fast.scrubLabel}
+        />
+
+        <div className="grid grid-cols-4 gap-2">
+          {QUICK_DURATIONS.map((min) => (
             <button
               key={min}
               type="button"
               onClick={() => setDurationMin(min)}
               className={cn(
-                'h-12 rounded-full border font-mono text-sm tabular-nums  active:translate-y-[1px] active:shadow-none cursor-pointer',
+                'h-10 rounded-xl border-2 font-mono text-xs font-semibold tabular-nums cursor-pointer active:translate-y-[2px]',
                 durationMin === min
-                  ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
-                  : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--surface-2)]'
+                  ? 'border-[var(--border-card)] bg-[var(--accent)] text-[var(--accent-ink)]'
+                  : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink)] hover:bg-[var(--surface-2)]'
               )}
             >
-              {min} {copy.urge.min}
+              {min}m
             </button>
           ))}
         </div>

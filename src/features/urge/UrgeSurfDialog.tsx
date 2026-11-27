@@ -17,7 +17,7 @@ interface UrgeSurfDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type Phase = 'setup' | 'active' | 'checkin';
+type Phase = 'setup' | 'active' | 'survived' | 'checkin';
 type BreathStage = 'inhale1' | 'inhale2' | 'exhale';
 
 const CYCLE_SECONDS = 11; // 4s inhale + 1s top-up + 6s exhale
@@ -132,7 +132,7 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
         triggerConfetti();
         playStampUnlock();
         setClarityAfter(Math.max(1, clarityBefore - 1));
-        setPhase('checkin');
+        setPhase('survived');
       }
     }, 150);
   };
@@ -322,29 +322,52 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
         </div>
       )}
 
-      {phase === 'active' && (
-        <div className="space-y-6">
-          <div className="flex flex-col items-center gap-3 py-2">
-            <LoboMascot mood="urge" size="sm" />
-            <div className="relative flex h-48 w-48 items-center justify-center">
-              <div className="tea-ripple absolute inset-0 border border-[var(--border)]" />
-              <div
-                className={cn(
-                  'tea-ripple h-48 w-48 border-2 border-[var(--accent)] bg-[var(--surface)] transition-transform ease-tactile',
-                  ringScale,
-                  ringDuration
-                )}
-              />
-              <div className="relative z-10 text-center">
-                <p className="font-mono text-3xl tracking-tight text-[var(--ink)] tabular-nums">
-                  {formatClock(remainingSec)}
-                </p>
-                <p className="mt-1.5 text-xs tracking-wide text-[var(--ink-muted)]">
-                  {breathText}
-                </p>
+      {phase === 'active' && (() => {
+        const progress =
+          plannedSecRef.current > 0
+            ? Math.min(1, Math.max(0, 1 - remainingSec / plannedSecRef.current))
+            : 0;
+        const amp =
+          progress < 0.3
+            ? 8 + (progress / 0.3) * 14
+            : Math.max(2, 22 * (1 - (progress - 0.3) / 0.7));
+        const shift = (progress * 180) % 60;
+        const wavePath = `M 0 26 Q ${25 + shift * 0.2} ${26 - amp} 50 26 T 100 26 T 150 26 T 200 26 T 250 26 T 300 26 L 300 44 L 0 44 Z`;
+
+        return (
+          <div className="space-y-5">
+            <div className="flex flex-col items-center gap-2.5 py-1">
+              <LoboMascot mood="urge" size="sm" />
+              <div className="relative flex h-44 w-44 items-center justify-center">
+                <div className="tea-ripple absolute inset-0 border border-[var(--border)]" />
+                <div
+                  className={cn(
+                    'tea-ripple h-40 w-40 border-2 border-[var(--accent)] bg-[var(--surface)] transition-transform ease-tactile',
+                    ringScale,
+                    ringDuration
+                  )}
+                />
+                <div className="relative z-10 text-center">
+                  <p className="font-mono text-3xl tracking-tight text-[var(--ink)] tabular-nums">
+                    {formatClock(remainingSec)}
+                  </p>
+                  <p className="mt-1 text-xs tracking-wide text-[var(--ink-muted)]">
+                    {breathText}
+                  </p>
+                </div>
+              </div>
+
+              <div className="w-full overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg)]">
+                <svg viewBox="0 0 300 44" className="h-9 w-full" preserveAspectRatio="none" aria-hidden="true">
+                  <path
+                    d={wavePath}
+                    fill="var(--warn-soft)"
+                    stroke="var(--warn)"
+                    stroke-width="2"
+                  />
+                </svg>
               </div>
             </div>
-          </div>
 
           <div className="flex items-center justify-between gap-2 border-t border-[var(--border)] pt-4">
             <div className="flex items-center gap-1.5">
@@ -406,6 +429,29 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
               {copy.urge.finishEarly}
             </Button>
           </div>
+        </div>
+        );
+      })()}
+
+      {phase === 'survived' && (
+        <div className="space-y-5 py-4 text-center">
+          <div className="flex justify-center">
+            <LoboMascot mood="celebrate" size="lg" />
+          </div>
+          <div className="space-y-1">
+            <p className="font-mono text-2xl font-semibold text-[var(--ink)] tabular-nums">
+              00:00
+            </p>
+            <p className="text-sm text-[var(--ink-muted)]">{copy.urge.checkinSubtitle}</p>
+          </div>
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => setPhase('checkin')}
+            className="w-full"
+          >
+            {copy.urge.survivedWave}
+          </Button>
         </div>
       )}
 

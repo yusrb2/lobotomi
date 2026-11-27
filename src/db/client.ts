@@ -99,6 +99,7 @@ export async function loadAllData(): Promise<{
   settings: AppSettings;
   gatekeeper: GatekeeperConfig;
   onboardingCompleted: boolean;
+  challengesCompleted: number;
   sessions: SessionRecord[];
   rules: IfThenRule[];
   menuItems: LowDopamineItem[];
@@ -107,17 +108,27 @@ export async function loadAllData(): Promise<{
 }> {
   await seedIfNeeded();
   const db = await getDB();
-  const [rawSettings, rawGatekeeper, rawOnboarding, sessions, rules, menuItems, ledger, dumps] =
-    await Promise.all([
-      db.get('meta', 'settings') as Promise<Partial<AppSettings> | undefined>,
-      db.get('meta', 'gatekeeper') as Promise<Partial<GatekeeperConfig> | undefined>,
-      db.get('meta', 'lobotomi_onboarding_completed') as Promise<boolean | undefined>,
-      db.getAllFromIndex('sessions', 'by-startedAt'),
-      db.getAll('rules'),
-      db.getAll('menuItems'),
-      db.getAllFromIndex('ledger', 'by-createdAt'),
-      db.getAllFromIndex('dumps', 'by-createdAt'),
-    ]);
+  const [
+    rawSettings,
+    rawGatekeeper,
+    rawOnboarding,
+    rawChallenges,
+    sessions,
+    rules,
+    menuItems,
+    ledger,
+    dumps,
+  ] = await Promise.all([
+    db.get('meta', 'settings') as Promise<Partial<AppSettings> | undefined>,
+    db.get('meta', 'gatekeeper') as Promise<Partial<GatekeeperConfig> | undefined>,
+    db.get('meta', 'lobotomi_onboarding_completed') as Promise<boolean | undefined>,
+    db.get('meta', 'lobotomi_challenges_completed') as Promise<number | undefined>,
+    db.getAllFromIndex('sessions', 'by-startedAt'),
+    db.getAll('rules'),
+    db.getAll('menuItems'),
+    db.getAllFromIndex('ledger', 'by-createdAt'),
+    db.getAllFromIndex('dumps', 'by-createdAt'),
+  ]);
 
   let lsOnboarding = false;
   try {
@@ -136,6 +147,7 @@ export async function loadAllData(): Promise<{
       apps: Array.isArray(rawGatekeeper?.apps) ? rawGatekeeper.apps : [],
     },
     onboardingCompleted: Boolean(rawOnboarding) || lsOnboarding,
+    challengesCompleted: typeof rawChallenges === 'number' ? rawChallenges : 0,
     sessions: sessions.sort((a, b) => b.startedAt - a.startedAt),
     rules: rules.sort((a, b) => b.createdAt - a.createdAt),
     menuItems: menuItems.sort((a, b) => a.createdAt - b.createdAt),
@@ -157,6 +169,11 @@ export async function saveGatekeeperDB(gatekeeper: GatekeeperConfig): Promise<vo
 export async function saveOnboardingCompletedDB(): Promise<void> {
   const db = await getDB();
   await db.put('meta', true, 'lobotomi_onboarding_completed');
+}
+
+export async function saveChallengesCompletedDB(count: number): Promise<void> {
+  const db = await getDB();
+  await db.put('meta', count, 'lobotomi_challenges_completed');
 }
 
 export async function putSessionDB(session: SessionRecord): Promise<void> {

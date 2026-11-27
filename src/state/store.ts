@@ -26,10 +26,12 @@ import {
   putSessionDB,
   replaceAllDataDB,
   resetAllDataDB,
+  saveChallengesCompletedDB,
   saveGatekeeperDB,
   saveOnboardingCompletedDB,
   saveSettingsDB,
 } from '../db/client';
+import type { BoredomChallenge } from '../lib/challenges';
 import { getDict } from '../i18n';
 import { syncStatusBar } from '../lib/native';
 import {
@@ -43,6 +45,7 @@ export type PlanSubTab = 'rules' | 'menu';
 
 export const ready = signal(false);
 export const onboardingCompleted = signal(true);
+export const challengesCompleted = signal(0);
 export const activeTab = signal<NavTab>('pause');
 export const planSubTab = signal<PlanSubTab>('rules');
 export const autoPickNonce = signal(0);
@@ -169,6 +172,7 @@ export async function initStore(): Promise<void> {
   settings.value = data.settings;
   gatekeeperConfig.value = data.gatekeeper;
   onboardingCompleted.value = data.onboardingCompleted;
+  challengesCompleted.value = data.challengesCompleted;
   sessions.value = data.sessions;
   rules.value = data.rules;
   menuItems.value = data.menuItems;
@@ -196,6 +200,23 @@ export function markOnboardingCompleted(): void {
     // Ignore storage quota issues.
   }
   void saveOnboardingCompletedDB();
+}
+
+export async function completeDailyChallenge(challenge: BoredomChallenge): Promise<void> {
+  const nextCount = challengesCompleted.value + 1;
+  challengesCompleted.value = nextCount;
+  await saveChallengesCompletedDB(nextCount);
+  const now = Date.now();
+  const sec = challenge.minutes * 60;
+  await addSession({
+    id: makeId('chal'),
+    type: 'fast',
+    startedAt: now - sec * 1000,
+    endedAt: now,
+    plannedSeconds: sec,
+    actualSeconds: sec,
+    completed: true,
+  });
 }
 
 export async function updateSettings(patch: Partial<AppSettings>): Promise<void> {

@@ -109,6 +109,10 @@ export function App() {
     { id: 'plan', label: copy.nav.plan, icon: Compass },
     { id: 'ledger', label: copy.nav.ledger, icon: BookOpen },
   ];
+  const activeNavIndex = Math.max(
+    0,
+    navItems.findIndex((item) => item.id === tab)
+  );
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-2xl flex-col">
@@ -166,19 +170,28 @@ export function App() {
       )}
 
       <main className="flex flex-1 flex-col px-5 py-6">
-        {tab === 'pause' && <HomeView onStartUrge={() => setUrgeOpen(true)} />}
-        {tab === 'fast' && <BoredomFastView />}
-        {tab === 'guard' && <GatekeeperView />}
-        {tab === 'plan' && <PlanView />}
-        {tab === 'ledger' && <LedgerView />}
+        <div key={tab} className="flex flex-1 flex-col animate-tab-enter">
+          {tab === 'pause' && <HomeView onStartUrge={() => setUrgeOpen(true)} />}
+          {tab === 'fast' && <BoredomFastView />}
+          {tab === 'guard' && <GatekeeperView />}
+          {tab === 'plan' && <PlanView />}
+          {tab === 'ledger' && <LedgerView />}
+        </div>
       </main>
 
       {!oledOverride.value && (
         <nav
           aria-label="Primary"
-          className="sticky bottom-0 border-t border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-[2px]"
+          className="sticky bottom-0 border-t-2 border-[var(--border)] bg-[var(--bg)]/95 px-2 py-1.5 backdrop-blur-[2px]"
         >
-          <div className="mx-auto grid max-w-2xl grid-cols-5">
+          <div className="relative mx-auto grid max-w-2xl grid-cols-5">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0.5 left-0 w-1/5 px-1 transition-transform duration-300 ease-spring"
+              style={{ transform: `translate3d(${activeNavIndex * 100}%, 0, 0)` }}
+            >
+              <div className="h-full w-full rounded-2xl border-2 border-[var(--border-card)] bg-[var(--accent-soft)]" />
+            </div>
             {navItems.map(({ id, label, icon: Icon }) => {
               const active = tab === id;
               return (
@@ -190,13 +203,15 @@ export function App() {
                   }}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'flex flex-col items-center justify-center gap-1 py-3 text-[11px] font-medium tracking-wide cursor-pointer',
-                    active ? 'text-[var(--ink)]' : 'text-[var(--ink-muted)] hover:text-[var(--ink)]'
+                    'relative z-10 flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-bold tracking-wide cursor-pointer',
+                    active
+                      ? 'text-[var(--accent-strong)]'
+                      : 'text-[var(--ink-muted)] hover:text-[var(--ink)]'
                   )}
                 >
                   <Icon
                     className={cn('h-4 w-4', active && 'text-[var(--accent-strong)]')}
-                    strokeWidth={1.75}
+                    strokeWidth={2}
                   />
                   <span>{label}</span>
                 </button>

@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import { TabPanel, Tabs } from '../../components/ui/Tabs';
+import { PassportStamps } from '../../components/PassportStamps';
 import { dict } from '../../state/store';
 import { BrainDump } from './BrainDump';
 import { CalmDotMatrix } from './CalmDotMatrix';
@@ -20,6 +21,7 @@ export function LedgerView() {
         ]}
       >
         <TabPanel value="ledger" className="space-y-6">
+          <PassportStamps />
           <CalmDotMatrix />
           <StimulationLedger />
         </TabPanel>
