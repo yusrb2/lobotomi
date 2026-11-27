@@ -1,6 +1,6 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Bell, RefreshCw, Shuffle, Shield, Sparkles } from 'lucide-preact';
+import { Bell, RefreshCw, Shuffle, Shield, Hand } from 'lucide-preact';
 import { SproutDoodle, SteamingTeaDoodle } from './Doodles';
 import { Button } from './ui/Button';
 import { audioEngine } from '../lib/audio';
@@ -278,10 +278,10 @@ export function InteractiveTutorialDialog({
           aria-describedby={undefined}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
-          className="fixed left-1/2 top-1/2 z-50 flex w-[calc(100vw-2rem)] max-w-lg max-h-[90dvh] flex-col -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[14px] border-[1.5px] border-[var(--border)] bg-[var(--bg)] text-[var(--ink)] shadow-[0_5px_0_var(--card-shadow)] focus:outline-none"
+          className="fixed left-1/2 top-1/2 z-50 flex w-[calc(100vw-2rem)] max-w-lg max-h-[90dvh] flex-col -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--bg)] text-[var(--ink)]  focus:outline-none"
         >
           {/* Top bar: Progress capsules + Skip */}
-          <div className="flex items-center justify-between gap-3 border-b border-dashed border-[var(--border)] px-5 py-3.5">
+          <div className="flex items-center justify-between gap-3 border-b border-[var(--border)] px-5 py-3.5">
             <div className="flex items-center gap-1.5" role="tablist" aria-label="Tutorial steps">
               {Array.from({ length: TOTAL_STEPS }).map((_, idx) => {
                 const active = idx === step;
@@ -313,7 +313,7 @@ export function InteractiveTutorialDialog({
               <button
                 type="button"
                 onClick={() => finishAndClose(false)}
-                className="rounded-[8px] px-2 py-1 font-mono text-[11px] uppercase tracking-wide text-[var(--ink-muted)] hover:bg-[var(--surface)] hover:text-[var(--ink)] cursor-pointer"
+                className="rounded-full px-2 py-1 font-mono text-[11px] uppercase tracking-wide text-[var(--ink-muted)] hover:bg-[var(--surface)] hover:text-[var(--ink)] cursor-pointer"
               >
                 {tut.skip}
               </button>
@@ -333,7 +333,7 @@ export function InteractiveTutorialDialog({
                 <>
                   <div className="flex items-center justify-between gap-3">
                     <div className="space-y-1">
-                      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent)]">
+                      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
                         {tut.step1.subtitle}
                       </p>
                       <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
@@ -353,7 +353,7 @@ export function InteractiveTutorialDialog({
                       onClick={handleTactileTest}
                       className="w-full"
                     >
-                      <Sparkles className="h-4 w-4" strokeWidth={1.5} />
+                      <Hand className="h-4 w-4" strokeWidth={1.75} />
                       <span>{tut.step1.testBtn}</span>
                     </Button>
                     <p className="font-mono text-xs text-[var(--ink-muted)] tabular-nums min-h-[1rem]">
@@ -366,7 +366,7 @@ export function InteractiveTutorialDialog({
               {step === 1 && (
                 <>
                   <div className="space-y-1">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent)]">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
                       {tut.step2.subtitle}
                     </p>
                     <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
@@ -380,7 +380,7 @@ export function InteractiveTutorialDialog({
 
                   <div className="paper-card flex flex-col items-center gap-4 p-4">
                     <div className="relative flex h-36 w-36 items-center justify-center">
-                      <div className="tea-ripple absolute inset-0 border-[1.5px] border-dashed border-[var(--border)]" />
+                      <div className="tea-ripple absolute inset-0 border border-[var(--border)]" />
                       <div
                         className={cn(
                           'tea-ripple h-32 w-32 border-2 border-[var(--accent)] bg-[var(--bg)] transition-transform ease-tactile',
@@ -412,7 +412,7 @@ export function InteractiveTutorialDialog({
               {step === 2 && (
                 <>
                   <div className="space-y-1">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent)]">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
                       {tut.step3.subtitle}
                     </p>
                     <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
@@ -424,7 +424,7 @@ export function InteractiveTutorialDialog({
                     {tut.step3.body}
                   </p>
 
-                  <div className="rounded-[12px] border-[1.5px] border-[#36302B] bg-black p-5 text-center space-y-3">
+                  <div className="rounded-2xl border border-[#36302B] bg-black p-5 text-center space-y-3">
                     <p
                       className={cn(
                         'font-mono text-4xl tracking-tight tabular-nums transition-colors duration-300',
@@ -442,7 +442,7 @@ export function InteractiveTutorialDialog({
                       onClick={handleRingBowl}
                       className="border-[#36302B] bg-[#191614] text-[#EDE4D7] shadow-none hover:bg-[#231F1C]"
                     >
-                      <Bell className="h-3.5 w-3.5 text-[#84A98C]" strokeWidth={1.5} />
+                      <Bell className="h-3.5 w-3.5 text-[#84A98C]" strokeWidth={1.75} />
                       <span>{tut.step3.ringBtn}</span>
                     </Button>
                   </div>
@@ -453,7 +453,7 @@ export function InteractiveTutorialDialog({
                 <>
                   <div className="flex items-start justify-between gap-3">
                     <div className="space-y-1">
-                      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent)]">
+                      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
                         {tut.step4.subtitle}
                       </p>
                       <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
@@ -484,13 +484,13 @@ export function InteractiveTutorialDialog({
                       <span
                         className={cn(
                           'font-mono text-[10px] font-bold uppercase tracking-[0.14em]',
-                          flippedToPlan ? 'text-[var(--accent)]' : 'text-[var(--warn)]'
+                          flippedToPlan ? 'text-[var(--accent-strong)]' : 'text-[var(--warn)]'
                         )}
                       >
                         {flippedToPlan ? tut.step4.planBadge : tut.step4.autopilotBadge}
                       </span>
                       <span className="inline-flex items-center gap-1 font-mono text-[10px] text-[var(--ink-muted)]">
-                        <RefreshCw className="h-3 w-3" strokeWidth={1.5} />
+                        <RefreshCw className="h-3 w-3" strokeWidth={1.75} />
                         {tut.step4.flipHint}
                       </span>
                     </div>
@@ -506,7 +506,7 @@ export function InteractiveTutorialDialog({
                       onClick={handleShuffleSlow}
                       className="w-full"
                     >
-                      <Shuffle className="h-3.5 w-3.5" strokeWidth={1.5} />
+                      <Shuffle className="h-3.5 w-3.5" strokeWidth={1.75} />
                       <span>{tut.step4.shuffleBtn}</span>
                     </Button>
                     {shuffledActivity && (
@@ -521,7 +521,7 @@ export function InteractiveTutorialDialog({
               {step === 4 && (
                 <>
                   <div className="space-y-1">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent)]">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
                       {tut.step5.subtitle}
                     </p>
                     <DialogPrimitive.Title className="font-serif text-3xl leading-tight text-[var(--ink)]">
@@ -533,7 +533,7 @@ export function InteractiveTutorialDialog({
                     {tut.step5.body}
                   </p>
 
-                  <div className="rounded-[12px] border-[1.5px] border-[#36302B] bg-[#191614] p-4 text-[#EDE4D7] space-y-3">
+                  <div className="rounded-2xl border border-[#36302B] bg-[#191614] p-4 text-[#EDE4D7] space-y-3">
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#A69A8D]">
                         LOBOTOMI · TEA BREAK
@@ -541,7 +541,7 @@ export function InteractiveTutorialDialog({
                       <button
                         type="button"
                         onClick={() => setPreviewAppIdx((i) => (i === 0 ? 1 : 0))}
-                        className="rounded-[6px] border border-[#36302B] bg-[#231F1C] px-2 py-0.5 font-mono text-[10px] text-[#EDE4D7] cursor-pointer"
+                        className="rounded-full border border-[#36302B] bg-[#231F1C] px-2 py-0.5 font-mono text-[10px] text-[#EDE4D7] cursor-pointer"
                       >
                         {previewApp} ↻
                       </button>
@@ -557,10 +557,10 @@ export function InteractiveTutorialDialog({
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 pt-1">
-                      <div className="rounded-[8px] bg-[#84A98C] px-2.5 py-2 text-center text-[11px] font-semibold text-[#191614]">
+                      <div className="rounded-full bg-[#84A98C] px-2.5 py-2 text-center text-[11px] font-semibold text-[#191614]">
                         {copy.gatekeeper.putDownBtn}
                       </div>
-                      <div className="rounded-[8px] border border-[#36302B] bg-[#191614] px-2.5 py-2 text-center font-mono text-[11px] text-[#6E6257]">
+                      <div className="rounded-full border border-[#36302B] bg-[#191614] px-2.5 py-2 text-center font-mono text-[11px] text-[#6E6257]">
                         {tut.step5.previewLocked}
                       </div>
                     </div>
@@ -571,7 +571,7 @@ export function InteractiveTutorialDialog({
                     onClick={() => finishAndClose(true)}
                     className="w-full"
                   >
-                    <Shield className="h-4 w-4 text-[var(--accent)]" strokeWidth={1.5} />
+                    <Shield className="h-4 w-4 text-[var(--accent-strong)]" strokeWidth={1.75} />
                     <span>{tut.step5.setupGatekeeperBtn}</span>
                   </Button>
                 </>
@@ -580,7 +580,7 @@ export function InteractiveTutorialDialog({
           </div>
 
           {/* Footer navigation */}
-          <div className="flex items-center justify-between gap-3 border-t border-dashed border-[var(--border)] bg-[var(--surface)]/60 px-5 py-3.5">
+          <div className="flex items-center justify-between gap-3 border-t border-[var(--border)] bg-[var(--surface)]/60 px-5 py-3.5">
             {step > 0 ? (
               <Button variant="secondary" onClick={() => goToStep(step - 1)}>
                 {tut.back}

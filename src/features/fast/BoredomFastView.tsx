@@ -229,13 +229,13 @@ export function BoredomFastView() {
               toggleOledDuringActive();
             }}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-[3px] border px-2.5 py-1 font-mono text-[11px] cursor-pointer',
+              'inline-flex items-center gap-1.5 rounded-2xl border px-2.5 py-1 font-mono text-[11px] cursor-pointer',
               oledEnabled
                 ? 'border-[var(--border)] bg-transparent text-[var(--ink)]'
                 : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)]'
             )}
           >
-            <Moon className="h-3.5 w-3.5" strokeWidth={1.5} />
+            <Moon className="h-3.5 w-3.5" strokeWidth={1.75} />
             <span>{copy.fast.oledToggle}</span>
           </button>
         </div>
@@ -274,9 +274,9 @@ export function BoredomFastView() {
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5">
                 {noise === 'off' ? (
-                  <VolumeX className="h-4 w-4 text-[var(--ink-muted)]" strokeWidth={1.5} />
+                  <VolumeX className="h-4 w-4 text-[var(--ink-muted)]" strokeWidth={1.75} />
                 ) : (
-                  <Volume2 className="h-4 w-4 text-[var(--accent)]" strokeWidth={1.5} />
+                  <Volume2 className="h-4 w-4 text-[var(--accent-strong)]" strokeWidth={1.75} />
                 )}
                 {(['off', 'brown', 'pink'] as const).map((mode) => (
                   <button
@@ -284,7 +284,7 @@ export function BoredomFastView() {
                     type="button"
                     onClick={() => handleNoiseSwitch(mode)}
                     className={cn(
-                      'rounded-[2px] border px-2 py-1 font-mono text-[11px] cursor-pointer',
+                      'rounded-full border px-2 py-1 font-mono text-[11px] cursor-pointer',
                       noise === mode
                         ? 'border-[var(--accent)] text-[var(--ink)] bg-[var(--surface-2)]'
                         : 'border-[var(--border)] text-[var(--ink-muted)]'
@@ -302,9 +302,9 @@ export function BoredomFastView() {
               <button
                 type="button"
                 onClick={() => setScratchpadOpen((v) => !v)}
-                className="inline-flex items-center gap-1.5 rounded-[2px] border border-[var(--border)] px-2.5 py-1 font-mono text-[11px] text-[var(--ink-muted)] hover:text-[var(--ink)] cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] px-2.5 py-1 font-mono text-[11px] text-[var(--ink-muted)] hover:text-[var(--ink)] cursor-pointer"
               >
-                <FileText className="h-3.5 w-3.5" strokeWidth={1.5} />
+                <FileText className="h-3.5 w-3.5" strokeWidth={1.75} />
                 <span>{copy.urge.scratchpadToggle}</span>
               </button>
             </div>
@@ -315,7 +315,7 @@ export function BoredomFastView() {
                 onInput={(e) => setScratchpad((e.target as HTMLTextAreaElement).value)}
                 rows={3}
                 placeholder={copy.urge.scratchpadPlaceholder}
-                className="w-full resize-none rounded-[3px] border border-[var(--border)] bg-[var(--surface-2)] p-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none"
+                className="w-full resize-none rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none"
               />
             )}
 
@@ -348,7 +348,7 @@ export function BoredomFastView() {
     return (
       <section className="mx-auto w-full max-w-lg space-y-6 py-4">
         <div className="space-y-1 border-b border-[var(--border)] pb-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--accent)]">
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--accent-strong)]">
             {completedNaturally ? copy.fast.completedNotice : copy.fast.endEarly}
           </p>
           <h2 className="font-serif text-3xl tracking-tight text-[var(--ink)]">
@@ -381,7 +381,7 @@ export function BoredomFastView() {
         </div>
 
         {scratchpad.trim().length > 0 && (
-          <div className="space-y-2 rounded-[3px] border border-[var(--border)] bg-[var(--surface)] p-3.5">
+          <div className="space-y-2 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3.5">
             <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--ink-muted)]">
               {copy.urge.dumpActionLabel}
             </p>
@@ -391,7 +391,7 @@ export function BoredomFastView() {
                 type="button"
                 onClick={() => setDumpChoice('release')}
                 className={cn(
-                  'h-8 rounded-[2px] border text-xs cursor-pointer',
+                  'h-8 rounded-full border text-xs cursor-pointer',
                   dumpChoice === 'release'
                     ? 'border-[var(--warn)] text-[var(--warn)] bg-[var(--bg)]'
                     : 'border-[var(--border)] text-[var(--ink-muted)]'
@@ -403,9 +403,9 @@ export function BoredomFastView() {
                 type="button"
                 onClick={() => setDumpChoice('archive')}
                 className={cn(
-                  'h-8 rounded-[2px] border text-xs cursor-pointer',
+                  'h-8 rounded-full border text-xs cursor-pointer',
                   dumpChoice === 'archive'
-                    ? 'border-[var(--accent)] text-[var(--accent)] bg-[var(--bg)]'
+                    ? 'border-[var(--accent)] text-[var(--accent-strong)] bg-[var(--bg)]'
                     : 'border-[var(--border)] text-[var(--ink-muted)]'
                 )}
               >
@@ -424,7 +424,7 @@ export function BoredomFastView() {
 
   return (
     <section className="space-y-7 py-2">
-      <div className="flex items-start justify-between gap-4 border-b border-dashed border-[var(--border)] pb-4">
+      <div className="flex items-start justify-between gap-4 border-b border-[var(--border)] pb-4">
         <div className="space-y-1.5">
           <h1 className="font-serif text-3xl tracking-tight text-[var(--ink)]">
             {copy.fast.title}
@@ -445,7 +445,7 @@ export function BoredomFastView() {
               type="button"
               onClick={() => setDurationMin(min)}
               className={cn(
-                'h-12 rounded-[10px] border-[1.5px] font-mono text-sm tabular-nums shadow-[0_2px_0_var(--card-shadow)] active:translate-y-[1px] active:shadow-none cursor-pointer',
+                'h-12 rounded-full border font-mono text-sm tabular-nums  active:translate-y-[1px] active:shadow-none cursor-pointer',
                 durationMin === min
                   ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                   : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--surface-2)]'
@@ -480,7 +480,7 @@ export function BoredomFastView() {
         </div>
       </div>
 
-      <div className="paper-card divide-y divide-dashed divide-[var(--border)]">
+      <div className="paper-card divide-y divide-[var(--border)]">
         <div className="flex items-center justify-between gap-4 p-4">
           <div className="space-y-0.5">
             <label htmlFor="fast-oled-switch" className="text-sm font-medium text-[var(--ink)]">
@@ -522,7 +522,7 @@ export function BoredomFastView() {
                 type="button"
                 onClick={() => handleNoiseSwitch(mode)}
                 className={cn(
-                  'h-9 rounded-[3px] border font-mono text-xs cursor-pointer',
+                  'h-9 rounded-2xl border font-mono text-xs cursor-pointer',
                   noise === mode
                     ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                     : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)] hover:text-[var(--ink)]'

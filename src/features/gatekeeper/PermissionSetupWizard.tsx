@@ -25,13 +25,13 @@ export function PermissionSetupWizard({ status }: PermissionSetupWizardProps) {
       <div className="paper-card p-4 space-y-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2.5">
-            <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--accent)]" strokeWidth={1.5} />
+            <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[var(--accent-strong)]" strokeWidth={1.75} />
             <div className="space-y-0.5">
               <p className="text-sm font-semibold text-[var(--ink)]">{w.allSetTitle}</p>
               <p className="text-xs text-[var(--ink-muted)]">{w.allSetDesc}</p>
             </div>
           </div>
-          <span className="shrink-0 rounded-full border border-[var(--accent)] bg-[var(--bg)] px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase text-[var(--accent)]">
+          <span className="shrink-0 rounded-full border border-[var(--accent)] bg-[var(--bg)] px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase text-[var(--accent-strong)]">
             {copy.gatekeeper.activeBadge}
           </span>
         </div>
@@ -48,7 +48,7 @@ export function PermissionSetupWizard({ status }: PermissionSetupWizardProps) {
               onClick={() => void requestIgnoreBatteryOptimization()}
             >
               <span>{w.batteryBtn}</span>
-              <ExternalLink className="h-3 w-3" strokeWidth={1.5} />
+              <ExternalLink className="h-3 w-3" strokeWidth={1.75} />
             </Button>
           </div>
         )}
@@ -60,9 +60,9 @@ export function PermissionSetupWizard({ status }: PermissionSetupWizardProps) {
 
   return (
     <div className="paper-card p-4 sm:p-5 space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-dashed border-[var(--border)] pb-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
         <div className="space-y-0.5">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--accent)]">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--accent-strong)]">
             {w.badge}
           </span>
           <h2 className="font-serif text-xl text-[var(--ink)]">
@@ -83,7 +83,7 @@ export function PermissionSetupWizard({ status }: PermissionSetupWizardProps) {
               <span
                 key={step}
                 className={cn(
-                  'inline-flex h-6 w-6 items-center justify-center rounded-full border-[1.5px] text-[11px]',
+                  'inline-flex h-6 w-6 items-center justify-center rounded-full border text-[11px]',
                   done
                     ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                     : active
@@ -116,14 +116,14 @@ export function PermissionSetupWizard({ status }: PermissionSetupWizardProps) {
               onClick={() => void openAppDetailsSettings()}
             >
               <span>{w.step1Btn}</span>
-              <ExternalLink className="h-3 w-3" strokeWidth={1.5} />
+              <ExternalLink className="h-3 w-3" strokeWidth={1.75} />
             </Button>
           </div>
         )}
 
         <div
           className={cn(
-            'rounded-[10px] border-[1.5px] bg-[var(--bg)] p-3.5 space-y-2.5',
+            'rounded-full border bg-[var(--bg)] p-3.5 space-y-2.5',
             status.accessibilityEnabled ? 'border-[var(--accent)]' : 'border-[var(--border)]'
           )}
         >
@@ -132,13 +132,13 @@ export function PermissionSetupWizard({ status }: PermissionSetupWizardProps) {
             <span
               className={cn(
                 'inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase',
-                status.accessibilityEnabled ? 'text-[var(--accent)]' : 'text-[var(--warn)]'
+                status.accessibilityEnabled ? 'text-[var(--accent-strong)]' : 'text-[var(--warn)]'
               )}
             >
               {status.accessibilityEnabled ? (
                 <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.75} />
               ) : (
-                <Circle className="h-3.5 w-3.5" strokeWidth={1.5} />
+                <Circle className="h-3.5 w-3.5" strokeWidth={1.75} />
               )}
               {status.accessibilityEnabled
                 ? copy.gatekeeper.activeBadge
@@ -152,13 +152,13 @@ export function PermissionSetupWizard({ status }: PermissionSetupWizardProps) {
             onClick={() => void openAccessibilitySettings()}
           >
             <span>{w.step2Btn}</span>
-            <ExternalLink className="h-3 w-3" strokeWidth={1.5} />
+            <ExternalLink className="h-3 w-3" strokeWidth={1.75} />
           </Button>
         </div>
 
         <div
           className={cn(
-            'rounded-[10px] border-[1.5px] bg-[var(--bg)] p-3.5 space-y-2.5',
+            'rounded-full border bg-[var(--bg)] p-3.5 space-y-2.5',
             status.overlayEnabled ? 'border-[var(--accent)]' : 'border-[var(--border)]'
           )}
         >
@@ -167,13 +167,13 @@ export function PermissionSetupWizard({ status }: PermissionSetupWizardProps) {
             <span
               className={cn(
                 'inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase',
-                status.overlayEnabled ? 'text-[var(--accent)]' : 'text-[var(--warn)]'
+                status.overlayEnabled ? 'text-[var(--accent-strong)]' : 'text-[var(--warn)]'
               )}
             >
               {status.overlayEnabled ? (
                 <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.75} />
               ) : (
-                <Circle className="h-3.5 w-3.5" strokeWidth={1.5} />
+                <Circle className="h-3.5 w-3.5" strokeWidth={1.75} />
               )}
               {status.overlayEnabled
                 ? copy.gatekeeper.activeBadge
@@ -187,7 +187,7 @@ export function PermissionSetupWizard({ status }: PermissionSetupWizardProps) {
             onClick={() => void openOverlaySettings()}
           >
             <span>{w.step3Btn}</span>
-            <ExternalLink className="h-3 w-3" strokeWidth={1.5} />
+            <ExternalLink className="h-3 w-3" strokeWidth={1.75} />
           </Button>
         </div>
 
@@ -197,7 +197,7 @@ export function PermissionSetupWizard({ status }: PermissionSetupWizardProps) {
             <p className="text-[11px] text-[var(--ink-muted)]">{w.batteryDesc}</p>
           </div>
           {status.batteryOptimizationIgnored ? (
-            <span className="font-mono text-[10px] font-bold uppercase text-[var(--accent)]">
+            <span className="font-mono text-[10px] font-bold uppercase text-[var(--accent-strong)]">
               {w.batteryReady}
             </span>
           ) : (

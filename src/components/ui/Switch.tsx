@@ -17,11 +17,11 @@ export function Switch({ checked, onCheckedChange, ariaLabel, id, className }: S
       onCheckedChange={onCheckedChange}
       aria-label={ariaLabel}
       className={cn(
-        'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-[1.5px] border-[var(--border)] bg-[var(--surface-2)] p-0.5 data-[state=checked]:border-[var(--accent)] data-[state=checked]:bg-[var(--accent)]',
+        'relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full border-2 border-[var(--border-card)] bg-[var(--surface-2)] p-0.5 data-[state=checked]:bg-[var(--accent)]',
         className
       )}
     >
-      <SwitchPrimitive.Thumb className="pointer-events-none block h-4 w-4 translate-x-0 rounded-full bg-[var(--bg)] border border-[var(--border)] shadow-[0_1px_0_var(--card-shadow)] transition-transform duration-350 ease-tactile data-[state=checked]:translate-x-5 data-[state=checked]:border-transparent" />
+      <SwitchPrimitive.Thumb className="pointer-events-none block h-5 w-5 translate-x-0 rounded-full bg-[var(--bg)] border-2 border-[var(--border-card)] transition-transform duration-300 ease-spring data-[state=checked]:translate-x-5" />
     </SwitchPrimitive.Root>
   );
 }

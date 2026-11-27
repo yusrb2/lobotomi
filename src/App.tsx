@@ -112,7 +112,7 @@ export function App() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-2xl flex-col">
       {!oledOverride.value && (
-        <header className="flex items-center justify-between border-b border-dashed border-[var(--border)] px-5 py-3.5">
+        <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3.5">
           <div className="flex items-baseline gap-2.5">
             <span className="font-serif text-xl tracking-tight text-[var(--ink)]">
               {copy.appName}
@@ -126,7 +126,7 @@ export function App() {
               type="button"
               onClick={toggleLocale}
               aria-label="Toggle language"
-              className="inline-flex h-8 items-center justify-center rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] px-2.5 font-mono text-[11px] tracking-[0.08em] text-[var(--ink)] shadow-[0_2px_0_var(--card-shadow)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
+              className="inline-flex h-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 font-mono text-[11px] tracking-[0.08em] text-[var(--ink)]  hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
             >
               {settings.value.locale === 'en' ? 'EN / ID' : 'ID / EN'}
             </button>
@@ -135,12 +135,12 @@ export function App() {
               onClick={cycleTheme}
               aria-label={copy.header.toggleTheme}
               title={copy.settings.themes[settings.value.theme]}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)] shadow-[0_2px_0_var(--card-shadow)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)]  hover:text-[var(--ink)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
             >
               {theme === 'dark' ? (
-                <Moon className="h-4 w-4" strokeWidth={1.5} />
+                <Moon className="h-4 w-4" strokeWidth={1.75} />
               ) : (
-                <SunMedium className="h-4 w-4" strokeWidth={1.5} />
+                <SunMedium className="h-4 w-4" strokeWidth={1.75} />
               )}
             </button>
             <button
@@ -148,17 +148,17 @@ export function App() {
               onClick={() => setTutorialOpen(true)}
               aria-label={copy.header.help}
               title={copy.header.help}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)] shadow-[0_2px_0_var(--card-shadow)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)]  hover:text-[var(--ink)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
             >
-              <HelpCircle className="h-4 w-4" strokeWidth={1.5} />
+              <HelpCircle className="h-4 w-4" strokeWidth={1.75} />
             </button>
             <button
               type="button"
               onClick={() => setSettingsOpen(true)}
               aria-label={copy.header.settings}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)] shadow-[0_2px_0_var(--card-shadow)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)]  hover:text-[var(--ink)] hover:bg-[var(--surface-2)] active:translate-y-[1px] active:shadow-none cursor-pointer"
             >
-              <Settings className="h-4 w-4" strokeWidth={1.5} />
+              <Settings className="h-4 w-4" strokeWidth={1.75} />
             </button>
           </div>
         </header>
@@ -175,7 +175,7 @@ export function App() {
       {!oledOverride.value && (
         <nav
           aria-label="Primary"
-          className="sticky bottom-0 border-t border-dashed border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-[2px]"
+          className="sticky bottom-0 border-t border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-[2px]"
         >
           <div className="mx-auto grid max-w-2xl grid-cols-5">
             {navItems.map(({ id, label, icon: Icon }) => {
@@ -194,8 +194,8 @@ export function App() {
                   )}
                 >
                   <Icon
-                    className={cn('h-4 w-4', active && 'text-[var(--accent)]')}
-                    strokeWidth={1.5}
+                    className={cn('h-4 w-4', active && 'text-[var(--accent-strong)]')}
+                    strokeWidth={1.75}
                   />
                   <span>{label}</span>
                 </button>

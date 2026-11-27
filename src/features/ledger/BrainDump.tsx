@@ -69,7 +69,7 @@ export function BrainDump() {
         />
 
         {notice && (
-          <p className="font-mono text-xs text-[var(--accent)]">{notice}</p>
+          <p className="font-mono text-xs text-[var(--accent-strong)]">{notice}</p>
         )}
 
         <div className="grid grid-cols-2 gap-2">
@@ -118,9 +118,9 @@ export function BrainDump() {
                   type="button"
                   onClick={() => void removeDump(dump.id)}
                   aria-label={copy.plan.delete}
-                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[3px] text-[var(--ink-muted)] hover:bg-[var(--bg)] hover:text-[var(--warn)] cursor-pointer"
+                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl text-[var(--ink-muted)] hover:bg-[var(--bg)] hover:text-[var(--warn)] cursor-pointer"
                 >
-                  <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  <Trash2 className="h-3.5 w-3.5" strokeWidth={1.75} />
                 </button>
               </li>
             ))}

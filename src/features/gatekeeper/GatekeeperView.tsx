@@ -128,7 +128,7 @@ export function GatekeeperView() {
 
   return (
     <section className="space-y-6 py-2">
-      <div className="flex items-start justify-between gap-4 border-b border-dashed border-[var(--border)] pb-4">
+      <div className="flex items-start justify-between gap-4 border-b border-[var(--border)] pb-4">
         <div className="space-y-1.5">
           <h1 className="font-serif text-3xl tracking-tight text-[var(--ink)]">
             {copy.gatekeeper.title}
@@ -146,7 +146,7 @@ export function GatekeeperView() {
               onClick={() => void refreshPermissions()}
               className="inline-flex items-center gap-1 font-mono text-[11px] text-[var(--ink-muted)] hover:text-[var(--ink)] cursor-pointer"
             >
-              <RefreshCw className="h-3 w-3" strokeWidth={1.5} />
+              <RefreshCw className="h-3 w-3" strokeWidth={1.75} />
               <span>{copy.gatekeeper.refreshStatus}</span>
             </button>
           </div>
@@ -159,14 +159,14 @@ export function GatekeeperView() {
             }}
             className="w-full"
           >
-            <Play className="h-4 w-4" strokeWidth={1.5} />
+            <Play className="h-4 w-4" strokeWidth={1.75} />
             <span>{copy.gatekeeper.previewScreen}</span>
           </Button>
         </div>
       ) : (
         <div className="paper-card space-y-4 p-4 sm:p-5">
           <div className="space-y-1">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--accent)]">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--accent-strong)]">
               {copy.gatekeeper.webModeTitle}
             </p>
             <p className="text-xs leading-relaxed text-[var(--ink-muted)]">
@@ -188,7 +188,7 @@ export function GatekeeperView() {
                   type="button"
                   onClick={() => setPracticeTarget(preset)}
                   className={cn(
-                    'rounded-[8px] border-[1.5px] px-2.5 py-1 font-mono text-[11px] cursor-pointer',
+                    'rounded-full border px-2.5 py-1 font-mono text-[11px] cursor-pointer',
                     practiceTarget === preset
                       ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                       : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)]'
@@ -203,7 +203,7 @@ export function GatekeeperView() {
               type="text"
               value={practiceTarget}
               onInput={(e) => setPracticeTarget((e.target as HTMLInputElement).value)}
-              className="h-10 w-full rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg)] px-3 text-sm text-[var(--ink)] focus:border-[var(--accent)] focus:outline-none"
+              className="h-10 w-full rounded-full border border-[var(--border)] bg-[var(--bg)] px-3 text-sm text-[var(--ink)] focus:border-[var(--accent)] focus:outline-none"
             />
           </div>
 
@@ -213,7 +213,7 @@ export function GatekeeperView() {
             disabled={!practiceTarget.trim()}
             className="w-full"
           >
-            <Play className="h-4 w-4" strokeWidth={1.5} />
+            <Play className="h-4 w-4" strokeWidth={1.75} />
             <span>{copy.gatekeeper.launchPractice}</span>
           </Button>
         </div>
@@ -236,7 +236,7 @@ export function GatekeeperView() {
                   type="button"
                   onClick={() => void updateGatekeeperConfig({ defaultDelaySeconds: sec })}
                   className={cn(
-                    'h-9 rounded-[8px] border-[1.5px] font-mono text-xs tabular-nums cursor-pointer',
+                    'h-9 rounded-full border font-mono text-xs tabular-nums cursor-pointer',
                     cfg.defaultDelaySeconds === sec
                       ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                       : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink)]'
@@ -259,7 +259,7 @@ export function GatekeeperView() {
                   type="button"
                   onClick={() => void updateGatekeeperConfig({ defaultGraceMinutes: min })}
                   className={cn(
-                    'h-9 rounded-[8px] border-[1.5px] font-mono text-xs tabular-nums cursor-pointer',
+                    'h-9 rounded-full border font-mono text-xs tabular-nums cursor-pointer',
                     cfg.defaultGraceMinutes === min
                       ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                       : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink)]'
@@ -289,7 +289,7 @@ export function GatekeeperView() {
                 type="button"
                 onClick={() => void updateGatekeeperConfig({ ambientSound: mode })}
                 className={cn(
-                  'h-9 rounded-[8px] border-[1.5px] font-mono text-xs cursor-pointer',
+                  'h-9 rounded-full border font-mono text-xs cursor-pointer',
                   cfg.ambientSound === mode
                     ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                     : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)]'
@@ -311,7 +311,7 @@ export function GatekeeperView() {
               </h2>
               <p className="text-xs text-[var(--ink-muted)]">{copy.gatekeeper.appsSubtitle}</p>
             </div>
-            <span className="font-mono text-xs font-bold text-[var(--accent)] tabular-nums">
+            <span className="font-mono text-xs font-bold text-[var(--accent-strong)] tabular-nums">
               {cfg.apps.length} {copy.gatekeeper.guardedCount}
             </span>
           </div>
@@ -319,14 +319,14 @@ export function GatekeeperView() {
           <div className="relative">
             <Search
               className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--ink-muted)]"
-              strokeWidth={1.5}
+              strokeWidth={1.75}
             />
             <input
               type="search"
               value={search}
               onInput={(e) => setSearch((e.target as HTMLInputElement).value)}
               placeholder={copy.gatekeeper.searchPlaceholder}
-              className="h-10 w-full rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--surface)] pl-9 pr-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none"
+              className="h-10 w-full rounded-full border border-[var(--border)] bg-[var(--surface)] pl-9 pr-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none"
             />
           </div>
 
@@ -339,7 +339,7 @@ export function GatekeeperView() {
               {copy.gatekeeper.emptyApps}
             </div>
           ) : (
-            <ul className="paper-card divide-y divide-dashed divide-[var(--border)]">
+            <ul className="paper-card divide-y divide-[var(--border)]">
               {filteredApps.map((app) => {
                 const guarded = guardedMap.get(app.packageName);
                 const enabled = Boolean(guarded);
@@ -351,10 +351,10 @@ export function GatekeeperView() {
                           <img
                             src={app.icon}
                             alt=""
-                            className="h-8 w-8 shrink-0 rounded-[8px] border border-[var(--border)] grayscale opacity-85"
+                            className="h-8 w-8 shrink-0 rounded-full border border-[var(--border)] grayscale opacity-85"
                           />
                         ) : (
-                          <div className="h-8 w-8 shrink-0 rounded-[8px] border border-[var(--border)] bg-[var(--surface-2)]" />
+                          <div className="h-8 w-8 shrink-0 rounded-full border border-[var(--border)] bg-[var(--surface-2)]" />
                         )}
                         <div className="min-w-0">
                           <p className="truncate text-sm font-semibold text-[var(--ink)]">
@@ -373,7 +373,7 @@ export function GatekeeperView() {
                     </div>
 
                     {guarded && (
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-dashed border-[var(--border)] pt-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border)] pt-2">
                         <div className="flex items-center gap-1.5">
                           {([180, 300] as const).map((sec) => (
                             <button
@@ -383,7 +383,7 @@ export function GatekeeperView() {
                                 updateAppEntry(app.packageName, { delaySeconds: sec })
                               }
                               className={cn(
-                                'rounded-[6px] border px-2 py-0.5 font-mono text-[10px] tabular-nums cursor-pointer',
+                                'rounded-full border px-2 py-0.5 font-mono text-[10px] tabular-nums cursor-pointer',
                                 guarded.delaySeconds === sec
                                   ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                                   : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)]'
@@ -403,7 +403,7 @@ export function GatekeeperView() {
                                 updateAppEntry(app.packageName, { graceMinutes: min })
                               }
                               className={cn(
-                                'rounded-[6px] border px-2 py-0.5 font-mono text-[10px] tabular-nums cursor-pointer',
+                                'rounded-full border px-2 py-0.5 font-mono text-[10px] tabular-nums cursor-pointer',
                                 guarded.graceMinutes === min
                                   ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                                   : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)]'

@@ -30,12 +30,12 @@ export function Slider({
       max={max}
       step={step}
       aria-label={ariaLabel}
-      className={cn('relative flex h-6 w-full touch-none select-none items-center', className)}
+      className={cn('relative flex h-7 w-full touch-none select-none items-center', className)}
     >
-      <SliderPrimitive.Track className="relative h-[4px] w-full grow rounded-full bg-[var(--surface-2)] border border-[var(--border)]">
+      <SliderPrimitive.Track className="relative h-2 w-full grow rounded-full bg-[var(--surface-2)] border-2 border-[var(--border-card)]">
         <SliderPrimitive.Range className="absolute h-full rounded-full bg-[var(--accent)]" />
       </SliderPrimitive.Track>
-      <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-[1.5px] border-[var(--accent)] bg-[var(--bg)] shadow-[0_2px_0_var(--card-shadow)] cursor-grab active:cursor-grabbing focus-visible:outline-none" />
+      <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-[var(--border-card)] bg-[var(--bg)] shadow-[0_2px_0_var(--card-shadow)] cursor-grab active:cursor-grabbing focus-visible:outline-none" />
     </SliderPrimitive.Root>
   );
 }

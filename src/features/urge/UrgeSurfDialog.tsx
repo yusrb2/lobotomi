@@ -237,7 +237,7 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
                   type="button"
                   onClick={() => setDurationMin(min)}
                   className={cn(
-                    'h-11 rounded-[3px] border font-mono text-sm tabular-nums cursor-pointer',
+                    'h-11 rounded-2xl border font-mono text-sm tabular-nums cursor-pointer',
                     durationMin === min
                       ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                       : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--surface-2)]'
@@ -283,7 +283,7 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
                   type="button"
                   onClick={() => handleNoiseSwitch(mode)}
                   className={cn(
-                    'h-9 rounded-[3px] border font-mono text-xs cursor-pointer',
+                    'h-9 rounded-2xl border font-mono text-xs cursor-pointer',
                     noise === mode
                       ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                       : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)] hover:text-[var(--ink)]'
@@ -321,7 +321,7 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
         <div className="space-y-6">
           <div className="flex flex-col items-center py-4">
             <div className="relative flex h-52 w-52 items-center justify-center">
-              <div className="tea-ripple absolute inset-0 border-[1.5px] border-dashed border-[var(--border)]" />
+              <div className="tea-ripple absolute inset-0 border border-[var(--border)]" />
               <div
                 className={cn(
                   'tea-ripple h-48 w-48 border-2 border-[var(--accent)] bg-[var(--surface)] transition-transform ease-tactile',
@@ -343,9 +343,9 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
           <div className="flex items-center justify-between gap-2 border-t border-[var(--border)] pt-4">
             <div className="flex items-center gap-1.5">
               {noise === 'off' ? (
-                <VolumeX className="h-4 w-4 text-[var(--ink-muted)]" strokeWidth={1.5} />
+                <VolumeX className="h-4 w-4 text-[var(--ink-muted)]" strokeWidth={1.75} />
               ) : (
-                <Volume2 className="h-4 w-4 text-[var(--accent)]" strokeWidth={1.5} />
+                <Volume2 className="h-4 w-4 text-[var(--accent-strong)]" strokeWidth={1.75} />
               )}
               {(['off', 'brown', 'pink'] as const).map((mode) => (
                 <button
@@ -353,7 +353,7 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
                   type="button"
                   onClick={() => handleNoiseSwitch(mode)}
                   className={cn(
-                    'rounded-[2px] border px-2 py-1 font-mono text-[11px] cursor-pointer',
+                    'rounded-full border px-2 py-1 font-mono text-[11px] cursor-pointer',
                     noise === mode
                       ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                       : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink-muted)]'
@@ -371,9 +371,9 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
             <button
               type="button"
               onClick={() => setScratchpadOpen((v) => !v)}
-              className="inline-flex items-center gap-1.5 rounded-[2px] border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 font-mono text-[11px] text-[var(--ink-muted)] hover:text-[var(--ink)] cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 font-mono text-[11px] text-[var(--ink-muted)] hover:text-[var(--ink)] cursor-pointer"
             >
-              <FileText className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <FileText className="h-3.5 w-3.5" strokeWidth={1.75} />
               <span>{copy.urge.scratchpadToggle}</span>
             </button>
           </div>
@@ -384,7 +384,7 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
               onInput={(e) => setScratchpad((e.target as HTMLTextAreaElement).value)}
               rows={3}
               placeholder={copy.urge.scratchpadPlaceholder}
-              className="w-full resize-none rounded-[3px] border border-[var(--border)] bg-[var(--surface)] p-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none"
+              className="w-full resize-none rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none"
             />
           )}
 
@@ -416,7 +416,7 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
                   type="button"
                   onClick={() => setTrigger(item)}
                   className={cn(
-                    'rounded-[3px] border px-3 py-1.5 text-xs cursor-pointer',
+                    'rounded-2xl border px-3 py-1.5 text-xs cursor-pointer',
                     trigger === item
                       ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                       : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)] hover:bg-[var(--surface-2)]'
@@ -448,7 +448,7 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
           </div>
 
           {scratchpad.trim().length > 0 && (
-            <div className="space-y-2 rounded-[3px] border border-[var(--border)] bg-[var(--surface)] p-3">
+            <div className="space-y-2 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3">
               <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--ink-muted)]">
                 {copy.urge.dumpActionLabel}
               </p>
@@ -458,7 +458,7 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
                   type="button"
                   onClick={() => setDumpChoice('release')}
                   className={cn(
-                    'h-8 rounded-[2px] border text-xs cursor-pointer',
+                    'h-8 rounded-full border text-xs cursor-pointer',
                     dumpChoice === 'release'
                       ? 'border-[var(--warn)] text-[var(--warn)] bg-[var(--bg)]'
                       : 'border-[var(--border)] text-[var(--ink-muted)]'
@@ -470,9 +470,9 @@ export function UrgeSurfDialog({ open, onOpenChange }: UrgeSurfDialogProps) {
                   type="button"
                   onClick={() => setDumpChoice('archive')}
                   className={cn(
-                    'h-8 rounded-[2px] border text-xs cursor-pointer',
+                    'h-8 rounded-full border text-xs cursor-pointer',
                     dumpChoice === 'archive'
-                      ? 'border-[var(--accent)] text-[var(--accent)] bg-[var(--bg)]'
+                      ? 'border-[var(--accent)] text-[var(--accent-strong)] bg-[var(--bg)]'
                       : 'border-[var(--border)] text-[var(--ink-muted)]'
                   )}
                 >

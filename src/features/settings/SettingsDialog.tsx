@@ -81,7 +81,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 type="button"
                 onClick={() => void updateSettings({ locale: loc })}
                 className={cn(
-                  'h-9 rounded-[3px] border font-mono text-xs uppercase cursor-pointer',
+                  'h-9 rounded-2xl border font-mono text-xs uppercase cursor-pointer',
                   s.locale === loc
                     ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                     : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)]'
@@ -104,7 +104,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 type="button"
                 onClick={() => void updateSettings({ theme: mode })}
                 className={cn(
-                  'h-9 rounded-[3px] border font-mono text-xs cursor-pointer',
+                  'h-9 rounded-2xl border font-mono text-xs cursor-pointer',
                   s.theme === mode
                     ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                     : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)]'
@@ -116,7 +116,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </div>
         </div>
 
-        <div className="paper-card divide-y divide-dashed divide-[var(--border)]">
+        <div className="paper-card divide-y divide-[var(--border)]">
           <div className="flex items-center justify-between gap-4 p-3.5">
             <div className="space-y-0.5">
               <label htmlFor="set-haptics" className="text-sm font-medium text-[var(--ink)]">
@@ -170,7 +170,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   type="button"
                   onClick={() => void updateSettings({ defaultNoise: mode })}
                   className={cn(
-                    'h-8 rounded-[3px] border font-mono text-xs cursor-pointer',
+                    'h-8 rounded-2xl border font-mono text-xs cursor-pointer',
                     s.defaultNoise === mode
                       ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                       : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)]'
@@ -193,7 +193,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           </p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <Button variant="secondary" size="sm" onClick={exportJsonFile}>
-              <Download className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <Download className="h-3.5 w-3.5" strokeWidth={1.75} />
               <span>{copy.settings.exportJson}</span>
             </Button>
             <Button
@@ -201,11 +201,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               size="sm"
               onClick={() => fileInputRef.current?.click()}
             >
-              <Upload className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <Upload className="h-3.5 w-3.5" strokeWidth={1.75} />
               <span>{copy.settings.importJson}</span>
             </Button>
             <Button variant="secondary" size="sm" onClick={exportMarkdownFile}>
-              <FileText className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <FileText className="h-3.5 w-3.5" strokeWidth={1.75} />
               <span>{copy.settings.exportMd}</span>
             </Button>
           </div>
@@ -220,7 +220,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <p
               className={cn(
                 'font-mono text-xs',
-                statusMsg.error ? 'text-[var(--warn)]' : 'text-[var(--accent)]'
+                statusMsg.error ? 'text-[var(--warn)]' : 'text-[var(--accent-strong)]'
               )}
             >
               {statusMsg.text}

@@ -118,7 +118,7 @@ export function LowDopamineMenu() {
           </div>
         </div>
         <Button variant="secondary" size="sm" onClick={openNew} className="shrink-0">
-          <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
+          <Plus className="h-3.5 w-3.5" strokeWidth={1.75} />
           <span>{copy.plan.addActivity}</span>
         </Button>
       </div>
@@ -135,7 +135,7 @@ export function LowDopamineMenu() {
                 type="button"
                 onClick={() => setDurationFilter(d)}
                 className={cn(
-                  'rounded-[2px] border px-2.5 py-1 font-mono text-[11px] cursor-pointer',
+                  'rounded-full border px-2.5 py-1 font-mono text-[11px] cursor-pointer',
                   durationFilter === d
                     ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                     : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)] hover:text-[var(--ink)]'
@@ -158,7 +158,7 @@ export function LowDopamineMenu() {
                 type="button"
                 onClick={() => setEnergyFilter(e)}
                 className={cn(
-                  'rounded-[2px] border px-2.5 py-1 font-mono text-[11px] cursor-pointer',
+                  'rounded-full border px-2.5 py-1 font-mono text-[11px] cursor-pointer',
                   energyFilter === e
                     ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                     : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)] hover:text-[var(--ink)]'
@@ -176,14 +176,14 @@ export function LowDopamineMenu() {
           disabled={filtered.length === 0}
           className="w-full"
         >
-          <Shuffle className="h-4 w-4" strokeWidth={1.5} />
+          <Shuffle className="h-4 w-4" strokeWidth={1.75} />
           <span>{pickedItem ? copy.plan.pickAnother : copy.plan.pickOne}</span>
         </Button>
       </div>
 
       {pickedItem && (
         <div className="paper-card border-[var(--accent)] p-4 space-y-2">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--accent)]">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
             {copy.plan.pickedHeading}
           </p>
           <p className="font-serif text-2xl leading-snug text-[var(--ink)]">
@@ -202,7 +202,7 @@ export function LowDopamineMenu() {
           {copy.plan.emptyMenu}
         </div>
       ) : (
-        <ul className="paper-card divide-y divide-dashed divide-[var(--border)]">
+        <ul className="paper-card divide-y divide-[var(--border)]">
           {filtered.map((item) => (
             <li
               key={item.id}
@@ -222,17 +222,17 @@ export function LowDopamineMenu() {
                   type="button"
                   onClick={() => openEdit(item)}
                   aria-label={copy.plan.edit}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-[3px] text-[var(--ink-muted)] hover:bg-[var(--bg)] hover:text-[var(--ink)] cursor-pointer"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-2xl text-[var(--ink-muted)] hover:bg-[var(--bg)] hover:text-[var(--ink)] cursor-pointer"
                 >
-                  <Pencil className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  <Pencil className="h-3.5 w-3.5" strokeWidth={1.75} />
                 </button>
                 <button
                   type="button"
                   onClick={() => void removeMenuItem(item.id)}
                   aria-label={copy.plan.delete}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-[3px] text-[var(--ink-muted)] hover:bg-[var(--bg)] hover:text-[var(--warn)] cursor-pointer"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-2xl text-[var(--ink-muted)] hover:bg-[var(--bg)] hover:text-[var(--warn)] cursor-pointer"
                 >
-                  <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  <Trash2 className="h-3.5 w-3.5" strokeWidth={1.75} />
                 </button>
               </div>
             </li>
@@ -260,7 +260,7 @@ export function LowDopamineMenu() {
               value={title}
               onInput={(e) => setTitle((e.target as HTMLInputElement).value)}
               placeholder={copy.plan.activityTitlePlaceholder}
-              className="h-10 w-full rounded-[3px] border border-[var(--border)] bg-[var(--surface)] px-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none"
+              className="h-10 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--accent)] focus:outline-none"
             />
           </div>
 
@@ -275,7 +275,7 @@ export function LowDopamineMenu() {
                   type="button"
                   onClick={() => setDuration(d)}
                   className={cn(
-                    'h-9 rounded-[3px] border font-mono text-xs cursor-pointer',
+                    'h-9 rounded-2xl border font-mono text-xs cursor-pointer',
                     duration === d
                       ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                       : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)]'
@@ -298,7 +298,7 @@ export function LowDopamineMenu() {
                   type="button"
                   onClick={() => setEnergy(e)}
                   className={cn(
-                    'h-9 rounded-[3px] border font-mono text-xs cursor-pointer',
+                    'h-9 rounded-2xl border font-mono text-xs cursor-pointer',
                     energy === e
                       ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                       : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)]'

@@ -135,7 +135,7 @@ export function StimulationLedger() {
             )}
           </div>
           <div className="flex justify-between font-mono text-[11px] tabular-nums">
-            <span className="text-[var(--accent)]">
+            <span className="text-[var(--accent-strong)]">
               {copy.ledger.slowLabel}: {sevenDayStats.slow}m
             </span>
             <span className="text-[var(--warn)]">
@@ -170,7 +170,7 @@ export function StimulationLedger() {
           {copy.ledger.recentTitle}
         </h3>
         <Button variant="primary" size="sm" onClick={() => openModal('slow')}>
-          <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
+          <Plus className="h-3.5 w-3.5" strokeWidth={1.75} />
           <span>{copy.ledger.logEntry}</span>
         </Button>
       </div>
@@ -180,7 +180,7 @@ export function StimulationLedger() {
           {copy.ledger.emptyEntries}
         </div>
       ) : (
-        <ul className="paper-card divide-y divide-dashed divide-[var(--border)]">
+        <ul className="paper-card divide-y divide-[var(--border)]">
           {timeline.map((row) => {
             if (row.kind === 'session') {
               const s = row.data;
@@ -194,7 +194,7 @@ export function StimulationLedger() {
                 >
                   <div className="min-w-0 space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--accent)]">
+                      <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--accent-strong)]">
                         {s.type === 'urge'
                           ? copy.ledger.sessionUrge
                           : copy.ledger.sessionFast}
@@ -203,7 +203,7 @@ export function StimulationLedger() {
                         {mins}m
                       </span>
                       {s.trigger && (
-                        <span className="rounded-[2px] border border-[var(--border)] bg-[var(--bg)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--ink-muted)]">
+                        <span className="rounded-full border border-[var(--border)] bg-[var(--bg)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--ink-muted)]">
                           {copy.urge.triggers[s.trigger]}
                         </span>
                       )}
@@ -221,9 +221,9 @@ export function StimulationLedger() {
                     type="button"
                     onClick={() => void removeSession(s.id)}
                     aria-label={copy.plan.delete}
-                    className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[3px] text-[var(--ink-muted)] hover:bg-[var(--bg)] hover:text-[var(--warn)] cursor-pointer"
+                    className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl text-[var(--ink-muted)] hover:bg-[var(--bg)] hover:text-[var(--warn)] cursor-pointer"
                   >
-                    <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+                    <Trash2 className="h-3.5 w-3.5" strokeWidth={1.75} />
                   </button>
                 </li>
               );
@@ -241,7 +241,7 @@ export function StimulationLedger() {
                       className={cn(
                         'font-mono text-[10px] uppercase tracking-[0.12em]',
                         entry.polarity === 'slow'
-                          ? 'text-[var(--accent)]'
+                          ? 'text-[var(--accent-strong)]'
                           : 'text-[var(--warn)]'
                       )}
                     >
@@ -263,9 +263,9 @@ export function StimulationLedger() {
                   type="button"
                   onClick={() => void removeLedgerEntry(entry.id)}
                   aria-label={copy.plan.delete}
-                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[3px] text-[var(--ink-muted)] hover:bg-[var(--bg)] hover:text-[var(--warn)] cursor-pointer"
+                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl text-[var(--ink-muted)] hover:bg-[var(--bg)] hover:text-[var(--warn)] cursor-pointer"
                 >
-                  <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  <Trash2 className="h-3.5 w-3.5" strokeWidth={1.75} />
                 </button>
               </li>
             );
@@ -284,7 +284,7 @@ export function StimulationLedger() {
                 type="button"
                 onClick={() => setPolarity('slow')}
                 className={cn(
-                  'h-10 rounded-[3px] border font-mono text-xs cursor-pointer',
+                  'h-10 rounded-2xl border font-mono text-xs cursor-pointer',
                   polarity === 'slow'
                     ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                     : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)]'
@@ -296,7 +296,7 @@ export function StimulationLedger() {
                 type="button"
                 onClick={() => setPolarity('fast')}
                 className={cn(
-                  'h-10 rounded-[3px] border font-mono text-xs cursor-pointer',
+                  'h-10 rounded-2xl border font-mono text-xs cursor-pointer',
                   polarity === 'fast'
                     ? 'border-[var(--warn)] bg-[var(--warn)] text-[var(--warn-ink)]'
                     : 'border-[var(--border)] bg-[var(--surface)] text-[var(--ink)]'
@@ -313,7 +313,7 @@ export function StimulationLedger() {
                 key={preset}
                 type="button"
                 onClick={() => setLabel(preset)}
-                className="rounded-[2px] border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs text-[var(--ink-muted)] hover:text-[var(--ink)] cursor-pointer"
+                className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1 text-xs text-[var(--ink-muted)] hover:text-[var(--ink)] cursor-pointer"
               >
                 {preset}
               </button>
@@ -334,7 +334,7 @@ export function StimulationLedger() {
                 required
                 value={label}
                 onInput={(e) => setLabel((e.target as HTMLInputElement).value)}
-                className="h-10 w-full rounded-[3px] border border-[var(--border)] bg-[var(--surface)] px-3 text-sm text-[var(--ink)] focus:border-[var(--accent)] focus:outline-none"
+                className="h-10 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 text-sm text-[var(--ink)] focus:border-[var(--accent)] focus:outline-none"
               />
             </div>
 
@@ -353,7 +353,7 @@ export function StimulationLedger() {
                 required
                 value={minutes}
                 onInput={(e) => setMinutes((e.target as HTMLInputElement).value)}
-                className="h-10 w-full rounded-[3px] border border-[var(--border)] bg-[var(--surface)] px-3 font-mono text-sm text-[var(--ink)] tabular-nums focus:border-[var(--accent)] focus:outline-none"
+                className="h-10 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 font-mono text-sm text-[var(--ink)] tabular-nums focus:border-[var(--accent)] focus:outline-none"
               />
             </div>
           </div>
@@ -370,7 +370,7 @@ export function StimulationLedger() {
               type="text"
               value={note}
               onInput={(e) => setNote((e.target as HTMLInputElement).value)}
-              className="h-10 w-full rounded-[3px] border border-[var(--border)] bg-[var(--surface)] px-3 text-sm text-[var(--ink)] focus:border-[var(--accent)] focus:outline-none"
+              className="h-10 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 text-sm text-[var(--ink)] focus:border-[var(--accent)] focus:outline-none"
             />
           </div>
 

@@ -60,7 +60,7 @@ export async function releaseKeepAwake(): Promise<void> {
 }
 
 export async function syncStatusBar(theme: 'light' | 'dark' | 'oled'): Promise<void> {
-  const color = theme === 'oled' ? '#000000' : theme === 'dark' ? '#191614' : '#F7F1E5';
+  const color = theme === 'oled' ? '#000000' : theme === 'dark' ? '#161514' : '#F6F2EA';
   if (typeof document !== 'undefined') {
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', color);

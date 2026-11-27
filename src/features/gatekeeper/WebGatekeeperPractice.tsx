@@ -199,12 +199,12 @@ export function WebGatekeeperPractice({
           type="button"
           onClick={toggleMute}
           disabled={ambientSound === 'silent'}
-          className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border-[1.5px] border-[#36302B] bg-[#231F1C] px-3 font-mono text-[11px] uppercase text-[#EDE4D7] disabled:opacity-50 cursor-pointer"
+          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-[#36302B] bg-[#231F1C] px-3 font-mono text-[11px] uppercase text-[#EDE4D7] disabled:opacity-50 cursor-pointer"
         >
           {muted ? (
-            <VolumeX className="h-3.5 w-3.5 text-[#A69A8D]" strokeWidth={1.5} />
+            <VolumeX className="h-3.5 w-3.5 text-[#A69A8D]" strokeWidth={1.75} />
           ) : (
-            <Volume2 className="h-3.5 w-3.5 text-[#84A98C]" strokeWidth={1.5} />
+            <Volume2 className="h-3.5 w-3.5 text-[#84A98C]" strokeWidth={1.75} />
           )}
           <span>
             {ambientSound === 'silent'
@@ -223,7 +223,7 @@ export function WebGatekeeperPractice({
 
         <div className="flex flex-col items-center justify-center py-6">
           <div className="relative flex h-56 w-56 items-center justify-center">
-            <div className="tea-ripple absolute inset-0 border-[1.5px] border-dashed border-[#36302B]" />
+            <div className="tea-ripple absolute inset-0 border border-[#36302B]" />
             <div
               className={cn(
                 'tea-ripple h-52 w-52 border-2 border-[#84A98C] bg-[#231F1C] transition-transform ease-tactile',
@@ -241,7 +241,7 @@ export function WebGatekeeperPractice({
         </div>
 
         <div className="space-y-5">
-          <div className="rounded-[12px] border-[1.5px] border-dashed border-[#36302B] bg-[#231F1C] p-4 space-y-1.5">
+          <div className="rounded-2xl border border-[#36302B] bg-[#231F1C] p-4 space-y-1.5">
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#84A98C]">
               {copy.gatekeeper.observationLabel}
             </p>
@@ -252,7 +252,7 @@ export function WebGatekeeperPractice({
             <button
               type="button"
               onClick={() => void handlePutItDown()}
-              className="h-12 w-full rounded-[10px] bg-[#84A98C] px-4 text-sm font-semibold text-[#191614] shadow-[0_3px_0_#0F0D0C] active:translate-y-[2px] active:shadow-none cursor-pointer"
+              className="h-12 w-full rounded-full bg-[#84A98C] px-4 text-sm font-semibold text-[#191614] shadow-[0_3px_0_#0F0D0C] active:translate-y-[2px] active:shadow-none cursor-pointer"
             >
               {copy.gatekeeper.putDownBtn}
             </button>
@@ -261,7 +261,7 @@ export function WebGatekeeperPractice({
               disabled={!unlocked}
               onClick={() => void handleContinue()}
               className={cn(
-                'h-12 w-full rounded-[10px] border-[1.5px] px-4 text-sm font-mono tabular-nums',
+                'h-12 w-full rounded-full border px-4 text-sm font-mono tabular-nums',
                 unlocked
                   ? 'border-[#84A98C] bg-[#231F1C] text-[#EDE4D7] cursor-pointer'
                   : 'border-[#36302B] bg-[#191614] text-[#6E6257] cursor-not-allowed'

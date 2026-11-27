@@ -107,7 +107,7 @@ export function CalmDotMatrix() {
         })}
       </div>
 
-      <div className="flex items-center justify-between border-t border-dashed border-[var(--border)] pt-2.5 font-mono text-[11px] text-[var(--ink-muted)] tabular-nums">
+      <div className="flex items-center justify-between border-t border-[var(--border)] pt-2.5 font-mono text-[11px] text-[var(--ink-muted)] tabular-nums">
         <span>
           {selectedDay
             ? `${selectedDay.dateKey} — ${selectedDay.minutes} ${copy.ledger.inspectValue}`
