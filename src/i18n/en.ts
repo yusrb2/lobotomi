@@ -249,18 +249,18 @@ export const en = {
       allSetTitle: 'Gatekeeper is armed and cozy.',
       allSetDesc: 'Both Android permissions are active. Test the pause screen anytime.',
       progressLabel: 'Step',
-      step1Title: '1. Allow Restricted Settings (Android 13+)',
+      step1Title: 'Restricted Settings Tip (Android 13+)',
       step1Desc:
         'If Android greys out the Accessibility switch for a sideloaded APK, open App Info, tap the ⋮ menu at the top right, and pick "Allow restricted settings".',
       step1Btn: 'Open App Info',
-      step2Title: '2. Turn On Pause Guard (Accessibility)',
+      step2Title: 'Turn on Pause Guard',
       step2Desc:
         'Detects only when your chosen apps open—0% reading your screen. Find "Lobotomi Pause Guard" and switch it on.',
-      step2Btn: 'Open Accessibility Settings',
-      step3Title: '3. Allow Display Over Other Apps',
+      step2Btn: 'Turn on Pause Guard',
+      step3Title: 'Allow Display Over Other Apps',
       step3Desc:
         'Lets the 3–5 minute pause sheet appear right away above YouTube, Instagram, or games.',
-      step3Btn: 'Allow Overlay Display',
+      step3Btn: 'Allow Display Over Other Apps',
       batteryTitle: 'Keep Guard Awake in Background (Optional)',
       batteryDesc: 'Prevents aggressive battery savers from putting the guard to sleep.',
       batteryReady: 'Exempted',

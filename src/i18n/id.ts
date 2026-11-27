@@ -249,18 +249,18 @@ export const id = {
       allSetTitle: 'Penjaga sudah siap menemani.',
       allSetDesc: 'Kedua izin inti Android sudah aktif. Kamu bisa uji layar jeda kapan saja.',
       progressLabel: 'Langkah',
-      step1Title: '1. Izinkan Setelan Terbatas (Android 13+)',
+      step1Title: 'Tips Setelan Terbatas (Android 13+)',
       step1Desc:
         'Kalau sakelar Aksesibilitas terkunci abu-abu pada APK mandiri, buka Info Aplikasi, ketuk ikon ⋮ di kanan atas, lalu pilih "Izinkan setelan terbatas" (Allow restricted settings).',
       step1Btn: 'Buka Info Aplikasi',
-      step2Title: '2. Aktifkan Layanan Jeda (Aksesibilitas)',
+      step2Title: 'Aktifkan Pause Guard',
       step2Desc:
         'Hanya mendeteksi saat aplikasi pilihanmu dibuka; 0% membaca isi layar. Cari "Penjaga Jeda Lobotomi" lalu nyalakan.',
-      step2Btn: 'Buka Pengaturan Aksesibilitas',
-      step3Title: '3. Izinkan Muncul di Atas Aplikasi Lain',
+      step2Btn: 'Aktifkan Pause Guard',
+      step3Title: 'Izinkan Tampil di Atas Aplikasi Lain',
       step3Desc:
         'Supaya layar jeda 3–5 menit bisa langsung muncul di atas YouTube, Instagram, atau gim.',
-      step3Btn: 'Izinkan Tampilan Overlay',
+      step3Btn: 'Izinkan Tampil di Atas Aplikasi Lain',
       batteryTitle: 'Jaga Tetap Aktif di Latar Belakang (Opsional)',
       batteryDesc: 'Mencegah penghemat baterai mematikan layanan penjaga saat ponsel lama tak dipakai.',
       batteryReady: 'Bebas Batas',

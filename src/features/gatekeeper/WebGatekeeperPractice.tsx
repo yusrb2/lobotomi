@@ -252,7 +252,7 @@ export function WebGatekeeperPractice({
             <button
               type="button"
               onClick={() => void handlePutItDown()}
-              className="h-12 w-full rounded-full bg-[#84A98C] px-4 text-sm font-semibold text-[#191614] shadow-[0_3px_0_#0F0D0C] active:translate-y-[2px] active:shadow-none cursor-pointer"
+              className="min-h-12 h-auto w-full rounded-full bg-[#84A98C] px-4 py-3 text-sm font-semibold leading-snug whitespace-normal text-[#191614] shadow-[0_3px_0_#0F0D0C] active:translate-y-[2px] active:shadow-none cursor-pointer"
             >
               {copy.gatekeeper.putDownBtn}
             </button>
@@ -261,7 +261,7 @@ export function WebGatekeeperPractice({
               disabled={!unlocked}
               onClick={() => void handleContinue()}
               className={cn(
-                'h-12 w-full rounded-full border px-4 text-sm font-mono tabular-nums',
+                'min-h-12 h-auto w-full rounded-full border px-4 py-3 text-sm font-mono leading-snug whitespace-normal tabular-nums',
                 unlocked
                   ? 'border-[#84A98C] bg-[#231F1C] text-[#EDE4D7] cursor-pointer'
                   : 'border-[#36302B] bg-[#191614] text-[#6E6257] cursor-not-allowed'

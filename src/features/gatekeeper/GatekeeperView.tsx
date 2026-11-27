@@ -129,7 +129,7 @@ export function GatekeeperView() {
   return (
     <section className="space-y-6 py-2">
       <div className="flex items-start justify-between gap-4 border-b border-[var(--border)] pb-4">
-        <div className="space-y-1.5">
+        <div className="min-w-0 flex-1 space-y-1.5">
           <h1 className="font-serif text-3xl tracking-tight text-[var(--ink)]">
             {copy.gatekeeper.title}
           </h1>
@@ -236,7 +236,7 @@ export function GatekeeperView() {
                   type="button"
                   onClick={() => void updateGatekeeperConfig({ defaultDelaySeconds: sec })}
                   className={cn(
-                    'h-9 rounded-full border font-mono text-xs tabular-nums cursor-pointer',
+                    'min-h-10 h-auto rounded-full border px-2 py-2 font-mono text-xs text-center leading-tight whitespace-normal tabular-nums cursor-pointer',
                     cfg.defaultDelaySeconds === sec
                       ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-ink)]'
                       : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink)]'
@@ -259,7 +259,7 @@ export function GatekeeperView() {
                   type="button"
                   onClick={() => void updateGatekeeperConfig({ defaultGraceMinutes: min })}
                   className={cn(
-                    'h-9 rounded-full border font-mono text-xs tabular-nums cursor-pointer',
+                    'min-h-10 h-auto rounded-full border px-2 py-2 font-mono text-xs text-center leading-tight whitespace-normal tabular-nums cursor-pointer',
                     cfg.defaultGraceMinutes === min
                       ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                       : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink)]'
@@ -289,7 +289,7 @@ export function GatekeeperView() {
                 type="button"
                 onClick={() => void updateGatekeeperConfig({ ambientSound: mode })}
                 className={cn(
-                  'h-9 rounded-full border font-mono text-xs cursor-pointer',
+                  'min-h-10 h-auto rounded-full border px-2 py-2 font-mono text-xs text-center leading-tight whitespace-normal cursor-pointer',
                   cfg.ambientSound === mode
                     ? 'border-[var(--ink)] bg-[var(--ink)] text-[var(--bg)]'
                     : 'border-[var(--border)] bg-[var(--bg)] text-[var(--ink-muted)]'
@@ -305,13 +305,13 @@ export function GatekeeperView() {
       {nativeAndroid && (
         <div className="space-y-3">
           <div className="flex items-baseline justify-between gap-2">
-            <div className="space-y-0.5">
+            <div className="min-w-0 flex-1 space-y-0.5">
               <h2 className="font-serif text-2xl tracking-tight text-[var(--ink)]">
                 {copy.gatekeeper.appsTitle}
               </h2>
               <p className="text-xs text-[var(--ink-muted)]">{copy.gatekeeper.appsSubtitle}</p>
             </div>
-            <span className="font-mono text-xs font-bold text-[var(--accent-strong)] tabular-nums">
+            <span className="shrink-0 font-mono text-xs font-bold text-[var(--accent-strong)] tabular-nums">
               {cfg.apps.length} {copy.gatekeeper.guardedCount}
             </span>
           </div>

@@ -28,7 +28,7 @@ export function Button({
       type={type}
       onClick={handleClick}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-2xl border-2 font-sans font-bold tracking-[0.01em] select-none cursor-pointer disabled:opacity-45 disabled:pointer-events-none ease-spring',
+        'inline-flex items-center justify-center gap-2 rounded-2xl border-2 font-sans font-bold tracking-[0.01em] whitespace-normal text-center leading-snug select-none cursor-pointer disabled:opacity-45 disabled:pointer-events-none ease-spring',
         variant === 'primary' &&
           'bg-[var(--accent)] text-[var(--accent-ink)] border-[var(--border-card)] shadow-[0_3px_0_var(--card-shadow)] hover:brightness-105 active:translate-y-[3px] active:shadow-none',
         variant === 'secondary' &&
@@ -37,9 +37,9 @@ export function Button({
           'bg-transparent text-[var(--ink-muted)] border-transparent shadow-none hover:text-[var(--ink)] hover:bg-[var(--surface)] active:scale-[0.97]',
         variant === 'warn' &&
           'bg-[var(--warn-soft)] text-[var(--warn)] border-[var(--warn)] shadow-[0_3px_0_var(--card-shadow-soft)] hover:bg-[var(--warn)] hover:text-[var(--warn-ink)] active:translate-y-[3px] active:shadow-none',
-        size === 'sm' && 'h-9 px-3.5 text-xs',
-        size === 'md' && 'h-11 px-5 text-sm',
-        size === 'lg' && 'h-12 px-6 text-base',
+        size === 'sm' && 'min-h-9 px-3.5 py-2 text-xs',
+        size === 'md' && 'min-h-11 px-5 py-2.5 text-sm',
+        size === 'lg' && 'min-h-12 px-6 py-3 text-base',
         className as string | undefined
       )}
       {...props}

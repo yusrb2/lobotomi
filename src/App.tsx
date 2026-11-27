@@ -115,9 +115,9 @@ export function App() {
   );
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-2xl flex-col">
+    <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col overflow-x-clip">
       {!oledOverride.value && (
-        <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-3.5">
+        <header className="flex items-center justify-between border-b border-[var(--border)] px-4 sm:px-5 py-3.5">
           <div className="flex items-baseline gap-2.5">
             <span className="font-serif text-xl tracking-tight text-[var(--ink)]">
               {copy.appName}
@@ -169,7 +169,7 @@ export function App() {
         </header>
       )}
 
-      <main className="flex flex-1 flex-col px-5 py-6">
+      <main className="flex flex-1 flex-col px-4 sm:px-5 py-6">
         <div key={tab} className="flex flex-1 flex-col animate-tab-enter">
           {tab === 'pause' && <HomeView onStartUrge={() => setUrgeOpen(true)} />}
           {tab === 'fast' && <BoredomFastView />}
